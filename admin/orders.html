@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders | MK Super Market</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="light">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>MK ADMIN</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> <span>Products</span></a></li>
+                <li><a href="banners.html"><i class="fas fa-image"></i> <span>Banners</span></a></li>
+                <li><a href="orders.html" class="active"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> <span>Users</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <div class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></div>
+                </div>
+                <div class="header-right">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+                    <div class="admin-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=c5a059&color=fff" alt="Admin">
+                        <span>Orders Manager</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="card-header" style="margin-bottom: 20px;">
+                    <h1>Order Management</h1>
+                    <div class="filter-group" style="display: flex; gap: 10px;">
+                        <select class="form-control" style="width: 150px;">
+                            <option>All Status</option>
+                            <option>Pending</option>
+                            <option>Processing</option>
+                            <option>Shipped</option>
+                            <option>Delivered</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Search Order ID..." style="width: 200px;">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#MK-9872</td>
+                                    <td>
+                                        <strong>Ali Khan</strong><br>
+                                        <small>+92 300 1234567</small>
+                                    </td>
+                                    <td>3 Items</td>
+                                    <td>Rs. 4,500</td>
+                                    <td>COD</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">Update</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#MK-9871</td>
+                                    <td>
+                                        <strong>Sara Ahmed</strong><br>
+                                        <small>+92 321 7654321</small>
+                                    </td>
+                                    <td>1 Item</td>
+                                    <td>Rs. 1,200</td>
+                                    <td>Paid (Card)</td>
+                                    <td><span class="badge badge-success">Delivered</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">Details</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/admin-main.js"></script>
+</body>
+</html>

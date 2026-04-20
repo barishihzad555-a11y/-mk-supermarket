@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics & Tracking | MK Super Market</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-theme="light">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>MK ADMIN</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> <span>Products</span></a></li>
+                <li><a href="banners.html"><i class="fas fa-image"></i> <span>Banners</span></a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a href="analytics.html" class="active"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> <span>Users</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <div class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></div>
+                </div>
+                <div class="header-right">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+                    <div class="admin-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=c5a059&color=fff" alt="Admin">
+                        <span>Analytics Expert</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <h1 class="page-title">Visitor Analytics</h1>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Page Views</h3>
+                            <p>128,430</p>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> 12.5%</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Bounce Rate</h3>
+                            <p>32.4%</p>
+                            <small class="text-danger"><i class="fas fa-arrow-down"></i> 2.1%</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Avg. Session</h3>
+                            <p>04:12</p>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> 0.5%</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Live Visitors</h3>
+                            <p id="live-count">42</p>
+                            <small class="text-primary">Real-time</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Traffic Source</h2>
+                        </div>
+                        <canvas id="trafficChart" height="200"></canvas>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Device Distribution</h2>
+                        </div>
+                        <canvas id="deviceChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h2>Visitor Locations</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Country</th>
+                                    <th>City</th>
+                                    <th>Visitors</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pakistan</td>
+                                    <td>Karachi</td>
+                                    <td>12,400</td>
+                                    <td><span class="badge badge-success">Top</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pakistan</td>
+                                    <td>Lahore</td>
+                                    <td>8,200</td>
+                                    <td><span class="badge badge-success">High</span></td>
+                                </tr>
+                                <tr>
+                                    <td>UAE</td>
+                                    <td>Dubai</td>
+                                    <td>4,100</td>
+                                    <td><span class="badge badge-warning">Medium</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin-main.js"></script>
+    <script>
+        // Charts Initialization
+        const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+        new Chart(trafficCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Page Views',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
+                    borderColor: '#c5a059',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(197, 160, 89, 0.1)'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const deviceCtx = document.getElementById('deviceChart').getContext('2d');
+        new Chart(deviceCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mobile', 'Desktop', 'Tablet'],
+                datasets: [{
+                    data: [75, 20, 5],
+                    backgroundColor: ['#c5a059', '#1a1a1a', '#777']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // Simulate Live Count
+        setInterval(() => {
+            const count = document.getElementById('live-count');
+            const change = Math.floor(Math.random() * 5) - 2;
+            count.innerText = Math.max(10, parseInt(count.innerText) + change);
+        }, 3000);
+    </script>
+</body>
+</html>
