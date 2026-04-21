@@ -196,34 +196,23 @@
 
     <script src="js/admin-main.js"></script>
     <script>
+        // Specific logic for products page
         const modal = document.getElementById('addProductModal');
         const btn = document.getElementById('addProductBtn');
         const closeBtn = document.querySelector('.close-modal');
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const imagePreview = document.getElementById('imagePreview');
-        const productForm = document.getElementById('productForm');
-        const productsTableBody = document.querySelector('tbody');
 
-        let selectedFiles = [];
-
-        // Modal Logic
-        btn.onclick = () => {
-            productForm.reset();
-            imagePreview.innerHTML = '';
-            selectedFiles = [];
-            modal.style.display = "flex";
-        };
+        btn.onclick = () => modal.style.display = "flex";
         closeBtn.onclick = () => modal.style.display = "none";
         window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
 
-        // File Handling
         dropZone.onclick = () => fileInput.click();
         fileInput.onchange = (e) => handleFiles(e.target.files);
 
         function handleFiles(files) {
             Array.from(files).forEach(file => {
-                selectedFiles.push(file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = document.createElement('img');
@@ -234,88 +223,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
-        // Load Products
-        async function loadProducts() {
-            const products = await window.api.list('products');
-            productsTableBody.innerHTML = products.map(p => {
-                let imgPath = (p.images && p.images[0]) ? p.images[0] : '';
-                // Fix path for admin panel: images are one level up
-                if (imgPath && !imgPath.startsWith('http')) {
-                    imgPath = '../' + imgPath.replace(/^\/+/, '');
-                }
-
-                return `
-                <tr>
-                    <td><img src="${imgPath}" style="width:50px; height:50px; object-fit:cover; border-radius: 5px;" onerror="this.src='https://placehold.co/50x50?text=Err'"></td>
-                    <td>${p.name}</td>
-                    <td>${p.category}</td>
-                    <td>Rs. ${p.price}</td>
-                    <td>${p.stock}</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>
-                        <div class="product-actions">
-                            <button class="btn-icon btn-edit" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-icon btn-delete" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `}).join('');
-        }
-
-        // Save Product
-        productForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const submitBtn = productForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Uploading...';
-
-            try {
-                // 1. Upload Images
-                const imageUrls = [];
-                for (const file of selectedFiles) {
-                    const optimized = await window.optimizeImage(file);
-                    const url = await window.uploadFile(optimized, 'products');
-                    if (url) imageUrls.push(url);
-                }
-
-                // 2. Prepare Data
-                const formData = new FormData(productForm);
-                const productData = {
-                    name: productForm.querySelector('[placeholder="e.g. Organic Apples"]').value,
-                    category: productForm.querySelector('select').value,
-                    stock: productForm.querySelector('[placeholder="0"]').value,
-                    price: productForm.querySelector('[placeholder="0.00"]').value,
-                    salePrice: productForm.querySelectorAll('[placeholder="Optional"]')[0].value,
-                    tags: productForm.querySelector('[placeholder="Split by comma"]').value,
-                    onSale: document.getElementById('onSale').checked,
-                    images: imageUrls
-                };
-
-                // 3. Save to API
-                const result = await window.api.save('products', productData);
-                if (result.status === 'success') {
-                    alert('Product saved successfully!');
-                    modal.style.display = "none";
-                    loadProducts();
-                }
-            } catch (err) {
-                alert('Error: ' + err.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Save Product';
-            }
-        };
-
-        async function deleteProduct(id) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                const result = await window.api.delete('products', id);
-                if (result.status === 'success') loadProducts();
-            }
-        }
-
-        // Initial Load
-        loadProducts();
     </script>
 </body>
 </html>

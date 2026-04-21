@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toggleSidebar) {
         toggleSidebar.addEventListener('click', () => {
             sidebar.classList.toggle('active');
+            // Add overlay if it doesn't exist
             let overlay = document.querySelector('.sidebar-overlay');
             if (!overlay) {
                 overlay = document.createElement('div');
@@ -34,35 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // API Helper
-    window.api = {
-        async list(type) {
-            try {
-                const res = await fetch(`api.php?action=list&type=${type}`);
-                if(!res.ok) throw new Error('Network error');
-                return await res.json();
-            } catch(e) { return []; }
-        },
-        async save(type, data) {
-            try {
-                const res = await fetch(`api.php?action=save&type=${type}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                return await res.json();
-            } catch(e) { return {status: 'error', message: e.message}; }
-        },
-        async delete(type, id) {
-            try {
-                const res = await fetch(`api.php?action=delete&type=${type}&id=${id}`);
-                return await res.json();
-            } catch(e) { return {status: 'error'}; }
+    // Load saved theme
+    const savedTheme = localStorage.getItem('admin-theme');
+    if (savedTheme) {
+        body.setAttribute('data-theme', savedTheme);
+        if (themeToggle) {
+            themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         }
-    };
+    }
 
-    // Optimization
-    window.optimizeImage = async (file) => {
+    // Image Optimization & Upload Logic (Mock)
+    window.optimizeAndUpload = async (file) => {
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -75,32 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const scale = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scale;
+
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    canvas.toBlob((blob) => {
-                        resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {type: 'image/webp'}));
-                    }, 'image/webp', 0.7);
+
+                    // Convert to WebP with compression
+                    const dataUrl = canvas.toDataURL('image/webp', 0.7); // 0.7 quality usually hits 30-50KB
+                    resolve(dataUrl);
                 };
             };
         });
-    };
-
-    // Real Upload for Hostinger
-    window.uploadFile = async (file, folder = 'products') => {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('folder', folder);
-
-        try {
-            const response = await fetch('upload.php', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            return result.status === 'success' ? result.url : null;
-        } catch (error) {
-            console.error('Upload Error:', error);
-            return null;
-        }
     };
 });
