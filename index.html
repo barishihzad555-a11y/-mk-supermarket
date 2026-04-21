@@ -82,10 +82,11 @@
                 if(Array.isArray(banners) && banners.length > 0) {
                     const slider = document.getElementById('main-slider');
                     slider.innerHTML = banners.map((b, i) => {
-                        // Fix image path if it starts with uploads/
+                        // Fix image path logic
                         let imgUrl = b.image;
                         if(imgUrl && !imgUrl.startsWith('http')) {
-                            imgUrl = imgUrl.startsWith('/') ? imgUrl.substring(1) : imgUrl;
+                            // Ensure path starts with uploads/ and handle potential leading slashes
+                            imgUrl = imgUrl.replace(/^\/+/, '');
                         }
                         return `
                         <div class="slide ${i === 0 ? 'active' : ''}">
@@ -104,7 +105,7 @@
                         // Process product image
                         let imgUrl = (p.images && p.images[0]) ? p.images[0] : 'https://placehold.co/200x200?text=Product';
                         if(imgUrl && !imgUrl.startsWith('http')) {
-                            imgUrl = imgUrl.startsWith('/') ? imgUrl.substring(1) : imgUrl;
+                            imgUrl = imgUrl.replace(/^\/+/, '');
                         }
 
                         return `

@@ -4,18 +4,16 @@ header('Access-Control-Allow-Origin: *');
 
 $targetDir = "../uploads/";
 
-// Create folders with full permissions
+// Create folders with proper permissions for most servers
 if (!file_exists($targetDir)) {
-    mkdir($targetDir, 0777, true);
-    chmod($targetDir, 0777);
+    mkdir($targetDir, 0755, true);
 }
 
 $folder = $_POST['folder'] ?? 'products';
 $uploadPath = $targetDir . $folder . "/";
 
 if (!file_exists($uploadPath)) {
-    mkdir($uploadPath, 0777, true);
-    chmod($uploadPath, 0777);
+    mkdir($uploadPath, 0755, true);
 }
 
 $fileKey = isset($_FILES['file']) ? 'file' : (isset($_FILES['image']) ? 'image' : null);
