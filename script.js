@@ -64,7 +64,7 @@ let productsData = [
         price: 1499,
         originalPrice: 2199,
         discount: "-30%",
-        image: IMAGE_BASE_URL + "products/headphone-p1.webp",
+        image: "uploads/products/headphone-p1.webp",
         category: "flash"
     },
     {
@@ -73,7 +73,7 @@ let productsData = [
         price: 799,
         originalPrice: 1099,
         discount: "-25%",
-        image: IMAGE_BASE_URL + "products/mouse-p2.webp",
+        image: "uploads/products/mouse-p2.webp",
         category: "flash"
     },
     {
@@ -82,7 +82,7 @@ let productsData = [
         price: 24999,
         originalPrice: 34999,
         discount: "-15%",
-        image: IMAGE_BASE_URL + "products/watch-p3.webp",
+        image: "uploads/products/watch-p3.webp",
         category: "popular"
     }
 ];
@@ -134,12 +134,16 @@ function renderProducts() {
 
     if (flashGrid) {
         const flashProducts = productsData.filter(p => p.category === 'flash');
-        flashGrid.innerHTML = flashProducts.map(p => createProductCard(p)).join('');
+        if (flashProducts.length > 0) {
+            flashGrid.innerHTML = flashProducts.map(p => createProductCard(p)).join('');
+        }
     }
 
     if (popularGrid) {
         const popularProducts = productsData.filter(p => p.category === 'popular');
-        popularGrid.innerHTML = popularProducts.map(p => createProductCard(p)).join('');
+        if (popularProducts.length > 0) {
+            popularGrid.innerHTML = popularProducts.map(p => createProductCard(p)).join('');
+        }
     }
 }
 
