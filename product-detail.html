@@ -3,26 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aura Pro Smartwatch | MK Luxury Store</title>
+    <title>Product Details | MK Luxury Store</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="product-style.css">
+    <style>
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+        .spinner { width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #c5a059; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
+    <div id="loading" class="loading-overlay"><div class="spinner"></div></div>
 
-    <!-- Header / Navigation -->
     <header class="luxury-header">
         <div class="header-container">
-            <button class="back-btn" onclick="history.back()">
+            <button class="back-btn" onclick="location.href='index.html'">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
             <div class="brand-logo">MK LUXE</div>
             <div class="header-actions">
-                <button class="action-btn">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
                 <button class="action-btn" id="cart-btn">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     <span class="cart-badge cart-count" id="cart-count">0</span>
@@ -31,351 +36,112 @@
         </div>
     </header>
 
-    <main class="product-page">
-        <!-- Image Gallery Section -->
+    <main class="product-page" id="product-content" style="display: none;">
         <section class="gallery-section">
             <div class="main-image-container">
-                <div class="discount-label">ESTATE EDITION</div>
-                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&q=80&w=800" alt="Aura Pro Smartwatch" id="main-product-img">
-                <div class="gallery-controls">
-                    <button class="zoom-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
-                </div>
+                <div class="discount-label" id="p-tag">PREMIUM</div>
+                <img src="" alt="Product Image" id="main-product-img">
             </div>
-            <div class="thumbnail-list">
-                <div class="thumb active" data-src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&q=80&w=800"><img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&q=80&w=200"></div>
-                <div class="thumb" data-src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=200"></div>
-                <div class="thumb" data-src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800"><img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=200"></div>
+            <div class="thumbnail-list" id="thumb-list">
+                <!-- Thumbs will be injected if multiple images exist -->
             </div>
         </section>
 
-        <!-- Product Core Info -->
         <section class="product-details-container">
             <div class="product-meta">
-                <span class="category-tag">PREMIUM ACCESSORIES</span>
-                <div class="rating-stars">
-                    <span class="stars">★★★★★</span>
-                    <span class="review-count">(128 Reviews)</span>
-                </div>
+                <span class="category-tag" id="p-category">CATEGORY</span>
+                <div class="rating-stars"><span>★★★★★</span></div>
             </div>
 
-            <h1 class="product-title">Aura Pro Titanium Edition</h1>
-            <p class="product-tagline">Crafted for Excellence. Designed for the Future.</p>
+            <h1 class="product-title" id="p-title">Product Name</h1>
+            <p class="product-tagline">Premium Quality Guaranteed</p>
 
             <div class="price-container">
-                <span class="current-price">24,999</span>
-                <span class="original-price">34,999</span>
-                <span class="save-percent">28% OFF</span>
-            </div>
-
-            <!-- Inventory Status -->
-            <div class="inventory-section">
-                <div class="inventory-text">
-                    <span>Hurry! Only 4 items left in stock</span>
-                    <span class="stock-label">LOW STOCK</span>
-                </div>
-                <div class="inventory-bar">
-                    <div class="inventory-fill"></div>
-                </div>
+                <span class="current-price" id="p-price">0</span>
+                <span class="original-price" id="p-old-price">0</span>
             </div>
 
             <div class="stock-status in-stock">
                 <span class="pulse-dot"></span>
-                Free Express Delivery by Tomorrow
-            </div>
-
-            <!-- Social Proof -->
-            <div class="social-proof">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: #c5a059;"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-                <span>42 people bought this in the last 24 hours</span>
+                In Stock - Ready to Dispatch
             </div>
 
             <hr class="divider">
 
-            <!-- Variants -->
-            <div class="variants-section">
-                <div class="variant-group">
-                    <label>Finish: <span id="selected-finish">Titanium Gray</span></label>
-                    <div class="color-options">
-                        <div class="color-swatch active" style="background: #555;" title="Titanium Gray"></div>
-                        <div class="color-swatch" style="background: #1a1a1a;" title="Obsidian Black"></div>
-                        <div class="color-swatch" style="background: #e5e5e5;" title="Arctic Silver"></div>
-                    </div>
-                </div>
-
-                <div class="variant-group">
-                    <label>Band Size: <span id="selected-size">44mm</span></label>
-                    <div class="size-options">
-                        <button class="size-btn">40mm</button>
-                        <button class="size-btn active">44mm</button>
-                        <button class="size-btn">46mm (Pro)</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
             <div class="purchase-actions">
                 <div class="qty-selector">
                     <button class="qty-btn" id="minus">-</button>
                     <input type="number" value="1" min="1" id="qty-input">
                     <button class="qty-btn" id="plus">+</button>
                 </div>
-                <button class="add-to-cart-luxury add-to-cart-btn" data-product="aura-pro">ADD TO BAG</button>
-            </div>
-            <button class="buy-now-luxury">BUY IT NOW</button>
-
-            <!-- Trust Badges -->
-            <div class="trust-badges">
-                <div class="badge-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <span>Secure Payment</span>
-                </div>
-                <div class="badge-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                    <span>Free Shipping</span>
-                </div>
-                <div class="badge-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.4-1.4 1"/><path d="m15 9-3-3-3 3"/><path d="M12 13v5"/><circle cx="12" cy="12" r="10"/></svg>
-                    <span>Easy Returns</span>
-                </div>
+                <button class="add-to-cart-luxury add-to-cart-btn" id="main-add-btn">ADD TO BAG</button>
             </div>
 
-            <!-- Accordion Details -->
             <div class="accordion-container">
                 <div class="accordion-item">
                     <div class="accordion-header">Description <span class="icon">+</span></div>
                     <div class="accordion-content">
-                        <p>The Aura Pro Titanium Edition represents the pinnacle of wearable technology. Forged from aerospace-grade titanium, it offers unparalleled durability without the weight. With an edge-to-edge Retina display and advanced biometric sensors, it's more than a watch—it's your ultimate companion for life's adventures.</p>
-                        <ul class="feature-list">
-                            <li>Aerospace-grade Titanium Case</li>
-                            <li>Sapphire Crystal Glass</li>
-                            <li>Advanced ECG & Blood Oxygen Tracking</li>
-                            <li>Up to 72-hour Battery Life</li>
-                            <li>50m Water Resistance (IP68)</li>
-                        </ul>
+                        <p id="p-desc">High-quality product from MK Supermarket. Carefully selected to meet our premium standards.</p>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">Specifications <span class="icon">+</span></div>
-                    <div class="accordion-content">
-                        <table class="specs-table">
-                            <tr><td>Display</td><td>1.9" Always-on Retina</td></tr>
-                            <tr><td>Processor</td><td>S9 Dual-Core Luxe</td></tr>
-                            <tr><td>Storage</td><td>64GB Internal</td></tr>
-                            <tr><td>Connectivity</td><td>LTE, Wi-Fi, BT 5.3</td></tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">FAQs <span class="icon">+</span></div>
-                    <div class="accordion-content">
-                        <div class="faq-item">
-                            <p class="faq-q">Is it compatible with Android?</p>
-                            <p class="faq-a">Yes, the Aura Pro is compatible with both iOS and Android devices via the MK Luxe app.</p>
-                        </div>
-                        <div class="faq-item">
-                            <p class="faq-q">What is the battery life?</p>
-                            <p class="faq-a">Up to 72 hours on a single charge with standard usage.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">Shipping & Returns <span class="icon">+</span></div>
-                    <div class="accordion-content">
-                        <p>We provide complimentary express shipping on all orders. Returns are accepted within 30 days of delivery for a full refund or exchange. Items must be in original condition and packaging.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Customer Reviews -->
-            <section class="reviews-section">
-                <h2 class="section-title">Verified Reviews</h2>
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <span class="reviewer-name">Arjun S.</span>
-                            <span class="reviewer-tag">Verified Buyer</span>
-                        </div>
-                        <div class="review-stars">★★★★★</div>
-                    </div>
-                    <p class="review-text">Absolutely stunning design. The titanium finish feels incredibly premium on the wrist. Fast shipping too!</p>
-                </div>
-            </section>
-        </section>
-
-        <!-- Related Products -->
-        <section class="related-products">
-            <h2 class="section-title">Complete The Look</h2>
-            <div class="horizontal-scroll">
-                <div class="mini-card">
-                    <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=200&h=200&fit=crop">
-                    <h3>Titanium Link Band</h3>
-                    <p>4,999</p>
-                </div>
-                <div class="mini-card">
-                    <img src="https://images.unsplash.com/photo-1544650039-22886fbb4323?w=200&h=200&fit=crop">
-                    <h3>Pro Charging Dock</h3>
-                    <p>2,499</p>
-                </div>
-                <div class="mini-card">
-                    <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200&h=200&fit=crop">
-                    <h3>Wireless Earbuds Luxe</h3>
-                    <p>12,999</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Recently Viewed -->
-        <section class="related-products recently-viewed">
-            <h2 class="section-title">Recently Viewed</h2>
-            <div class="horizontal-scroll">
-                <div class="mini-card">
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop">
-                    <h3>Luxe Headphones</h3>
-                    <p>15,999</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Sticky Mobile Footer -->
-    <div class="sticky-mobile-bar">
-        <div class="sticky-price">
-            <span class="p-label">Aura Pro</span>
-            <span class="p-val">24,999</span>
-        </div>
-        <button class="sticky-add-btn">ADD TO BAG</button>
-    </div>
-
-    <!-- Modals (Simplified) -->
-    <div id="cart-drawer" class="cart-overlay">
-        <div class="cart-container">
-            <div class="cart-header">
-                <div class="cart-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span>Shopping Bag</span>
-                </div>
-                <button class="cart-close" id="close-cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div>
-
-            <div class="cart-items" id="cart-items-container">
-                <!-- Cart items will be injected here -->
-                <div class="empty-cart-msg">
-                    <div class="empty-cart-icon">🛍️</div>
-                    <h3>Your bag is empty</h3>
-                    <p>Looks like you haven't added anything to your cart yet.</p>
-                    <button class="continue-shopping" id="continue-shopping">Start Shopping</button>
-                </div>
-            </div>
-
-            <div class="cart-footer">
-                <div class="cart-summary">
-                    <div class="summary-line">
-                        <span>Subtotal</span>
-                        <span id="cart-subtotal">0</span>
-                    </div>
-                    <div class="summary-line">
-                        <span>Shipping</span>
-                        <span class="free-shipping-text">FREE</span>
-                    </div>
-                    <div class="summary-line total">
-                        <span>Total</span>
-                        <span id="cart-total">0</span>
-                    </div>
-                </div>
-                <button class="checkout-btn">
-                    <span>PROCEED TO CHECKOUT</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Professional Profile Popup -->
-    <div id="profile-modal" class="modal-overlay">
-        <div class="profile-popup">
-            <div class="profile-close" id="close-profile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </div>
-
-            <div class="profile-header">
-                <div class="profile-avatar-container">
-                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop" alt="User" class="profile-avatar">
-                    <div class="online-indicator"></div>
-                </div>
-                <div class="profile-meta">
-                    <h3>Muhammad Khan</h3>
-                    <p>Premium Member</p>
-                </div>
-            </div>
-
-            <div class="profile-menu">
-                <a href="#" class="menu-item">
-                    <div class="menu-icon bg-luxury-gold">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    </div>
-                    <span>My Orders</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
-                <a href="#" class="menu-item">
-                    <div class="menu-icon bg-luxury-gold">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                    </div>
-                    <span>Wishlist</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
-                <a href="#" class="menu-item">
-                    <div class="menu-icon bg-luxury-gold">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <span>Account Privacy</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
-                <a href="#" class="menu-item">
-                    <div class="menu-icon bg-luxury-gold">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                    </div>
-                    <span>Settings</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
-            </div>
-
-            <button class="logout-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                Logout
-            </button>
-        </div>
-    </div>
-
     <script src="script.js"></script>
     <script>
-        // Gallery functionality
-        document.querySelectorAll('.thumb').forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                const mainImg = document.getElementById('main-product-img');
-                mainImg.src = this.dataset.src;
-                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
 
-        // Accordion functionality
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const content = this.nextElementSibling;
-                const icon = this.querySelector('.icon');
-                const isOpen = content.style.maxHeight;
+            if (!productId) {
+                window.location.href = 'index.html';
+                return;
+            }
 
-                // Close all others
-                document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
-                document.querySelectorAll('.accordion-header .icon').forEach(i => i.textContent = '+');
+            try {
+                // Fetch from your PHP endpoint
+                const response = await fetch('upload.php');
+                const products = await response.json();
 
-                if (!isOpen) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    icon.textContent = '−';
+                // Find the specific product
+                const product = products.find(p => p.id === productId);
+
+                if (product) {
+                    // Update UI
+                    document.getElementById('p-title').textContent = product.name;
+                    document.getElementById('p-price').textContent = 'Rs ' + parseInt(product.price).toLocaleString();
+                    document.getElementById('p-old-price').textContent = 'Rs ' + (parseInt(product.price) * 1.2).toLocaleString();
+                    document.getElementById('p-category').textContent = product.category || 'General';
+                    document.getElementById('main-product-img').src = product.image;
+                    document.getElementById('p-tag').textContent = product.category === 'Flash Sale' ? 'FLASH SALE' : 'PREMIUM';
+
+                    // Setup Add to Cart Button
+                    const addBtn = document.getElementById('main-add-btn');
+                    addBtn.setAttribute('data-product', product.id);
+
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('product-content').style.display = 'block';
+                } else {
+                    // Fallback to local productsData in script.js if not in dynamic
+                    setTimeout(() => {
+                        const localP = typeof productsData !== 'undefined' ? productsData.find(p => p.id === productId) : null;
+                        if (localP) {
+                             document.getElementById('p-title').textContent = localP.name;
+                             document.getElementById('p-price').textContent = 'Rs ' + localP.price.toLocaleString();
+                             document.getElementById('main-product-img').src = localP.image;
+                             document.getElementById('loading').style.display = 'none';
+                             document.getElementById('product-content').style.display = 'block';
+                        } else {
+                             alert('Product not found!');
+                             window.location.href = 'index.html';
+                        }
+                    }, 500);
                 }
-            });
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').style.display = 'none';
+            }
         });
 
         // Qty controls
@@ -386,6 +152,19 @@
         document.getElementById('minus').addEventListener('click', () => {
             const input = document.getElementById('qty-input');
             if(input.value > 1) input.value = parseInt(input.value) - 1;
+        });
+
+        // Accordion
+        document.querySelector('.accordion-header').addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            const icon = this.querySelector('.icon');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.textContent = '+';
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.textContent = '−';
+            }
         });
     </script>
 </body>
