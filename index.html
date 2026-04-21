@@ -6,10 +6,6 @@
     <meta name="description" content="MK Super Market - Your one-stop shop for Groceries, Electronics, Fashion, and more. Quality products at the best prices with free delivery.">
     <meta name="theme-color" content="#c5a059">
     <title>MK SUPER MARKET | Premium Shopping Experience</title>
-
-    <!-- Preload LCP Image -->
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=300&fit=crop">
-
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,620 +23,105 @@
                     </svg>
                 </div>
                 <input type="text" placeholder="Search products..." class="search-input" id="global-search" aria-label="Search products">
-                <button class="clear-search" id="clear-search" aria-label="Clear search" style="display: none;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
             </div>
-            <!-- Search Results Dropdown -->
             <div id="search-results" class="search-results-dropdown"></div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Luxury Brand Identity Line -->
         <div class="luxury-brand-identity">
             <span class="brand-text">MK SUPER MARKET</span>
         </div>
 
         <!-- Banner Slider -->
-        <section class="banner-slider" aria-label="Promotional Banners">
-            <div class="slider-container">
+        <section class="banner-slider">
+            <div class="slider-container" id="main-slider">
                 <div class="slide active">
-                    <!-- LCP Optimization: fetchpriority="high" for the first banner -->
-                    <img src="https://mksupermarket.com/uploads/banners/main-hero.webp"
-                         alt="Flash Sale Banner"
-                         fetchpriority="high"
-                         width="800" height="300"
-                         onerror="this.src='https://placehold.co/800x300?text=Premium+Banner'">
-                </div>
-                <div class="slide">
-                    <img src="https://mksupermarket.com/uploads/banners/new-arrivals.webp"
-                         alt="New Arrivals"
-                         loading="lazy"
-                         width="800" height="300"
-                         onerror="this.src='https://placehold.co/800x300?text=New+Arrivals'">
+                    <img src="https://mksupermarket.com/uploads/banners/main-hero.webp" alt="Welcome" fetchpriority="high">
                 </div>
             </div>
-            <div class="slider-dots">
-                <span class="dot active" data-slide="0" aria-label="Go to slide 1"></span>
-                <span class="dot" data-slide="1" aria-label="Go to slide 2"></span>
-                <span class="dot" data-slide="2" aria-label="Go to slide 3"></span>
-            </div>
+            <div class="slider-dots" id="slider-dots"></div>
         </section>
 
-        <!-- Flash Sale Section -->
+        <!-- Dynamic Products Section -->
         <section class="flash-sale">
             <div class="section-header">
-                <h2>Flash Sale</h2>
-                <div class="countdown-timer" id="countdown" aria-label="Flash sale ends in">
-                    <div class="timer-item">
-                        <div class="timer-value" id="hours">02</div>
-                    </div>
-                    <div class="timer-separator" aria-hidden="true">:</div>
-                    <div class="timer-item">
-                        <div class="timer-value" id="minutes">30</div>
-                    </div>
-                    <div class="timer-separator" aria-hidden="true">:</div>
-                    <div class="timer-item">
-                        <div class="timer-value" id="seconds">45</div>
-                    </div>
-                </div>
+                <h2>Our Products</h2>
             </div>
-            <div class="products-grid flash-products">
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://mksupermarket.com/uploads/products/headphone-p1.webp"
-                             alt="Premium Headphones"
-                             loading="lazy"
-                             width="200" height="200"
-                             onerror="this.src='https://placehold.co/200x200?text=Product'">
-                        <button class="wishlist-btn" data-product="1" aria-label="Add Premium Headphones to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-30%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Premium Headphones</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">1,499</span>
-                                <span class="original-price">2,199</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="1" aria-label="Add Premium Headphones to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=200&h=200&fit=crop" alt="Wireless Mouse" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="2" aria-label="Add Wireless Mouse to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-25%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Wireless Mouse</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">799</span>
-                                <span class="original-price">1,099</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="2" aria-label="Add Wireless Mouse to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=200&h=200&fit=crop" alt="Smart Thermostat" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="3" aria-label="Add Smart Thermostat to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-20%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Smart Thermostat</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">2,299</span>
-                                <span class="original-price">2,899</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="3" aria-label="Add Smart Thermostat to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop" alt="Fitness Tracker" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="4" aria-label="Add Fitness Tracker to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-18%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Fitness Tracker</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">999</span>
-                                <span class="original-price">1,219</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="4" aria-label="Add Fitness Tracker to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1518449077730-70c2f0d5d8d6?w=200&h=200&fit=crop" alt="Portable Charger" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="5" aria-label="Add Portable Charger to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-22%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Portable Charger</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">1,099</span>
-                                <span class="original-price">1,399</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="5" aria-label="Add Portable Charger to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Categories Section -->
-        <section class="categories" aria-label="Product Categories">
-            <div class="categories-grid">
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-grocery">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
-                    </div>
-                    <span>Grocery</span>
-                </div>
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-electronics">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-                            <polyline points="17 2 12 7 7 2"></polyline>
-                        </svg>
-                    </div>
-                    <span>Electronics</span>
-                </div>
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-fashion">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 1.96V6a2 2 0 002 2h15.44a2 2 0 002-2V5.42a2 2 0 00-1.32-1.96z"></path>
-                            <path d="M4 8v11a2 2 0 002 2h12a2 2 0 002-2V8"></path>
-                        </svg>
-                    </div>
-                    <span>Fashion</span>
-                </div>
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-home">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
-                        </svg>
-                    </div>
-                    <span>Home</span>
-                </div>
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-tools">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                        </svg>
-                    </div>
-                    <span>Tools</span>
-                </div>
-                <div class="category-item" tabindex="0">
-                    <div class="category-icon bg-beauty">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M12 2v10"></path>
-                            <path d="M18.4 4.6a9 9 0 1 1-12.8 0"></path>
-                        </svg>
-                    </div>
-                    <span>Beauty</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section class="products">
-            <div class="section-header-luxury">
-                <h2>Popular Products</h2>
-                <div class="free-delivery-badge">
-                    <div class="delivery-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="1" y="3" width="15" height="13"></rect>
-                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                        </svg>
-                    </div>
-                    <span>FREE DELIVERY OVER 5000</span>
-                </div>
-            </div>
-            <div class="products-grid">
-                <div class="product-card" onclick="location.href='product-detail.html'" tabindex="0">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=200&h=200&fit=crop" alt="Aura Pro Smartwatch" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="3" aria-label="Add Aura Pro Smartwatch to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-15%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Aura Pro Smartwatch</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">24,999</span>
-                                <span class="original-price">34,999</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="3" aria-label="Add Aura Pro Smartwatch to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=200&h=200&fit=crop" alt="Bluetooth Speaker" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="4" aria-label="Add Bluetooth Speaker to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-20%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Bluetooth Speaker</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">1,799</span>
-                                <span class="original-price">2,299</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="4" aria-label="Add Bluetooth Speaker to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=200&h=200&fit=crop" alt="Gaming Keyboard" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="5" aria-label="Add Gaming Keyboard to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-10%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Gaming Keyboard</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">3,499</span>
-                                <span class="original-price">3,899</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="5" aria-label="Add Gaming Keyboard to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=200&h=200&fit=crop" alt="Wireless Earbuds" loading="lazy" width="200" height="200">
-                        <button class="wishlist-btn" data-product="6" aria-label="Add Wireless Earbuds to wishlist">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                        </button>
-                        <span class="discount-badge">-35%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Wireless Earbuds</h3>
-                        <div class="price-action">
-                            <div class="price">
-                                <span class="current-price">2,199</span>
-                                <span class="original-price">3,399</span>
-                            </div>
-                            <button class="add-to-cart-btn" data-product="6" aria-label="Add Wireless Earbuds to cart">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="products-grid" id="products-container">
+                <p style="padding: 20px; text-align: center; width: 100%;">Loading products...</p>
             </div>
         </section>
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="bottom-nav" aria-label="Main Navigation">
-        <a href="#" class="nav-item active" data-page="home" aria-label="Home">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9,22 9,12 15,12 15,22"></polyline>
-            </svg>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg>
             <span>Home</span>
         </a>
-        <a href="#" class="nav-item" data-page="categories" aria-label="Categories">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span>Categories</span>
         </a>
-        <a href="#" class="nav-item" data-page="cart" id="cart-btn" aria-label="Shopping Cart">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
+        <a href="#" class="nav-item" id="cart-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             <span>Cart</span>
             <span class="cart-count" id="cart-count">0</span>
         </a>
-        <a href="#" class="nav-item" data-page="account" id="account-btn" aria-label="Account Profile">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <span>Account</span>
-        </a>
     </nav>
 
-    <!-- Professional Profile Popup -->
-    <div id="profile-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="profile-title">
-        <div class="profile-popup">
-            <button class="profile-close" id="close-profile" aria-label="Close profile">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-
-            <!-- Logged Out View (Login Form) -->
-            <div id="profile-logged-out" class="auth-view">
-                <div class="auth-header">
-                    <h3>Welcome Back</h3>
-                    <p>Login to your account</p>
-                </div>
-                <form id="login-form" class="auth-form">
-                    <div class="input-group">
-                        <input type="email" id="login-email" placeholder="Email Address" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="login-password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="auth-submit-btn">Login</button>
-
-                    <p class="auth-switch"><a href="#" id="forgot-password">Forgot Password?</a></p>
-
-                    <div class="auth-separator">
-                        <span>OR</span>
-                    </div>
-
-                    <button type="button" id="google-login-btn" class="google-auth-btn">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                        <span>Continue with Google</span>
-                    </button>
-
-                    <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
-                </form>
-            </div>
-
-            <!-- Signup View -->
-            <div id="profile-signup" class="auth-view" style="display: none;">
-                <div class="auth-header">
-                    <h3>Create Account</h3>
-                    <p>Join MK Supermarket</p>
-                </div>
-                <form id="signup-form" class="auth-form">
-                    <div class="input-group">
-                        <input type="text" id="signup-name" placeholder="Full Name" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" id="signup-email" placeholder="Email Address" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="signup-password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="auth-submit-btn">Sign Up</button>
-                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login</a></p>
-                </form>
-            </div>
-
-            <!-- Logged In View -->
-            <div id="profile-logged-in" style="display: none;">
-                <div class="profile-header">
-                    <div class="profile-avatar-container">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop" alt="User Profile Image" class="profile-avatar" id="user-avatar" width="80" height="80">
-                        <div class="online-indicator"></div>
-                    </div>
-                    <div class="profile-meta">
-                        <h3 id="profile-display-name">Guest User</h3>
-                        <p id="profile-membership">Premium Member</p>
-                    </div>
-                </div>
-
-                <div class="profile-menu">
-                    <a href="#" class="menu-item" id="view-orders">
-                        <div class="menu-icon bg-luxury-gold">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                        </div>
-                        <span>My Orders</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <div class="menu-icon bg-luxury-gold">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        </div>
-                        <span>Wishlist</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <div class="menu-icon bg-luxury-gold">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        </div>
-                        <span>Account Privacy</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <div class="menu-icon bg-luxury-gold">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        </div>
-                        <span>Settings</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </a>
-                </div>
-
-                <button class="logout-btn" id="logout-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    Logout
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- World-Class Luxury Cart Drawer -->
-    <div id="cart-drawer" class="cart-overlay" role="dialog" aria-modal="true">
-        <div class="cart-container">
-            <!-- Luxury Red Gradient Header -->
-            <div class="cart-header">
-                <div class="cart-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span>آپ کا کارٹ</span>
-                </div>
-                <button class="cart-close" id="close-cart" aria-label="Close cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div>
-
-            <!-- Free Shipping Progress Bar (Luxury Feature) -->
-            <div class="shipping-progress-container" style="padding: 15px 25px; background: #fffaf0; border-bottom: 1px solid #ffeaa7;">
-                <p style="font-size: 12px; margin-bottom: 8px; font-weight: 600; color: #d63031;" id="shipping-msg">مزید 5000 کی خریداری پر مفت ڈیلیوری پائیں!</p>
-                <div style="height: 6px; background: #eee; border-radius: 10px; overflow: hidden;">
-                    <div id="shipping-bar" style="height: 100%; width: 0%; background: linear-gradient(to right, #ff7675, #d63031); transition: width 0.5s ease;"></div>
-                </div>
-            </div>
-
-            <!-- Scrollable Items Area -->
-            <div class="cart-items" id="cart-items-container">
-                <!-- Empty State -->
-                <div class="empty-cart-msg">
-                    <div class="empty-cart-icon">🛒</div>
-                    <h3>کارٹ خالی ہے</h3>
-                    <p>آپ نے ابھی تک کوئی پروڈکٹ شامل نہیں کی۔ بہترین ڈیلز کے لیے شاپنگ جاری رکھیں۔</p>
-                    <button class="continue-shopping" id="continue-shopping-btn">ابھی شاپنگ کریں</button>
-                </div>
-            </div>
-
-            <!-- Fixed Footer -->
-            <div class="cart-footer">
-                <div class="cart-summary">
-                    <div class="summary-line">
-                        <span>سب ٹوٹل</span>
-                        <span id="cart-subtotal">Rs 0</span>
-                    </div>
-                    <div class="summary-line">
-                        <span>ڈیلیوری چارجز</span>
-                        <span class="free-shipping-text" id="delivery-cost">Rs 250</span>
-                    </div>
-                    <div class="summary-line total">
-                        <span>کل رقم</span>
-                        <span id="cart-total" class="total-amount">Rs 0</span>
-                    </div>
-                </div>
-                <button class="checkout-btn" id="checkout-btn">
-                    <span>آرڈر مکمل کریں</span>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-                <p style="text-align: center; font-size: 11px; color: #888; margin-top: 15px;">محفوظ ادائیگی اور تیز ڈیلیوری کی ضمانت</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Orders Modal -->
-    <div id="orders-modal" class="modal-overlay" style="display: none; z-index: 2100;">
-        <div class="profile-popup" style="max-height: 80vh; overflow-y: auto;">
-            <div class="auth-header" style="margin-bottom: 20px;">
-                <button class="profile-close" id="close-orders" style="top: 10px; right: 10px;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-                <h3>My Orders</h3>
-                <p>Track your recent purchases</p>
-            </div>
-            <div id="orders-list-container">
-                <!-- Orders will be injected here -->
-                <div style="text-align: center; padding: 40px 20px;">
-                    <p style="color: #666;">No orders found yet.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <script src="script.js"></script>
+    <script>
+        async function loadWebsiteData() {
+            try {
+                // Fetch Banners
+                const bannerRes = await fetch('admin/api.php?action=list&type=banners');
+                const banners = await bannerRes.json();
+                if(Array.isArray(banners) && banners.length > 0) {
+                    const slider = document.getElementById('main-slider');
+                    slider.innerHTML = banners.map((b, i) => `
+                        <div class="slide ${i === 0 ? 'active' : ''}">
+                            <img src="${b.image}" alt="${b.title}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} onerror="this.src='https://placehold.co/800x300?text=Banner'">
+                        </div>
+                    `).join('');
+                }
+
+                // Fetch Products
+                const productRes = await fetch('admin/api.php?action=list&type=products');
+                const products = await productRes.json();
+                const container = document.getElementById('products-container');
+
+                if(Array.isArray(products) && products.length > 0) {
+                    container.innerHTML = products.map(p => `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${p.images && p.images[0] ? p.images[0] : 'https://placehold.co/200x200?text=Product'}" alt="${p.name}" loading="lazy">
+                                ${p.onSale ? '<span class="discount-badge">SALE</span>' : ''}
+                            </div>
+                            <div class="product-info">
+                                <h3>${p.name}</h3>
+                                <div class="price-action">
+                                    <div class="price">
+                                        <span class="current-price">Rs. ${p.price}</span>
+                                        ${p.salePrice ? `<span class="original-price">Rs. ${p.salePrice}</span>` : ''}
+                                    </div>
+                                    <button class="add-to-cart-btn">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align:center; width:100%; padding: 20px;">No products available.</p>';
+                }
+            } catch (err) {
+                console.log('Static preview mode.');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadWebsiteData);
+    </script>
 </body>
 </html>
