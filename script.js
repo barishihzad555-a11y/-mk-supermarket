@@ -53,7 +53,7 @@ let cart = [];
 let wishlist = new Set();
 let countdownInterval;
 
-// Global Config for Hostinger
+// Global Config
 const IMAGE_BASE_URL = window.location.origin + "/";
 
 // Products Data Base (Initial/Fallback)
@@ -64,7 +64,7 @@ let productsData = [
         price: 1499,
         originalPrice: 2199,
         discount: "-30%",
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+        image: "uploads/products/headphones.webp",
         category: "flash"
     },
     {
@@ -73,7 +73,7 @@ let productsData = [
         price: 799,
         originalPrice: 1099,
         discount: "-25%",
-        image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+        image: "uploads/products/mouse.webp",
         category: "flash"
     },
     {
@@ -82,7 +82,7 @@ let productsData = [
         price: 24999,
         originalPrice: 34999,
         discount: "-15%",
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+        image: "uploads/products/smartwatch.webp",
         category: "popular"
     }
 ];
