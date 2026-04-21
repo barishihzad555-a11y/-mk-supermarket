@@ -32,12 +32,12 @@
             </button>
             <div class="luxe-brand">MK LUXURY</div>
             <div class="header-actions">
-                <button class="nav-btn-circle" id="share-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8m-4-6l-4-4-4 4m4-4v13"/></svg>
+                <button class="nav-btn-circle" id="account-btn" aria-label="Account">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </button>
-                <button class="nav-btn-circle cart-trigger">
+                <button class="nav-btn-circle" id="cart-btn" aria-label="Cart">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    <span class="cart-dot"></span>
+                    <span class="cart-dot" id="cart-count"></span>
                 </button>
             </div>
         </div>
@@ -46,12 +46,15 @@
     <main class="product-master-container">
         <!-- Immersive Gallery Section -->
         <section class="gallery-showcase">
-            <div class="main-stage">
+            <div class="main-stage" id="main-stage">
                 <div class="badge-overlay">
                     <span class="luxe-tag gradient-gold" id="p-tag">ELITE SELECTION</span>
                 </div>
                 <img id="main-image" src="" alt="Product Image" class="hero-img">
                 <div class="zoom-hint">Tap to enlarge</div>
+                <button class="close-zoom" id="close-zoom">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
             <div class="gallery-thumbs" id="thumb-container">
                 <!-- Thumbs will be injected -->
@@ -185,126 +188,268 @@
     <!-- Notification Toast -->
     <div id="toast" class="toast-hidden">Item added to bag successfully</div>
 
+    <!-- Global Modals (Cart & Profile) -->
+    <div id="profile-modal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="profile-popup">
+            <button class="profile-close" id="close-profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <div id="profile-logged-out" class="auth-view">
+                <div class="auth-header"><h3>Welcome Back</h3><p>Login to your account</p></div>
+                <form id="login-form" class="auth-form">
+                    <div class="input-group"><input type="email" id="login-email" placeholder="Email" required></div>
+                    <div class="input-group"><input type="password" id="login-password" placeholder="Password" required></div>
+                    <button type="submit" class="auth-submit-btn">Login</button>
+                    <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+                </form>
+            </div>
+            <div id="profile-signup" class="auth-view" style="display: none;">
+                <div class="auth-header"><h3>Create Account</h3></div>
+                <form id="signup-form" class="auth-form">
+                    <div class="input-group"><input type="text" id="signup-name" placeholder="Name" required></div>
+                    <div class="input-group"><input type="email" id="signup-email" placeholder="Email" required></div>
+                    <div class="input-group"><input type="password" id="signup-password" placeholder="Password" required></div>
+                    <button type="submit" class="auth-submit-btn">Sign Up</button>
+                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login</a></p>
+                </form>
+            </div>
+            <div id="profile-logged-in" style="display: none;">
+                <div class="profile-header"><div class="profile-meta"><h3 id="profile-display-name">User</h3><p>Premium Member</p></div></div>
+                <button class="logout-btn" id="logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-drawer" class="cart-overlay" role="dialog" aria-modal="true">
+        <div class="cart-container">
+            <div class="cart-header">
+                <div class="cart-title"><span>SHOPPING BAG</span></div>
+                <button class="cart-close" id="close-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            </div>
+            <div class="shipping-progress-container" style="padding: 15px 25px; background: #fcfcfc; border-bottom: 1px solid #eee;">
+                <p style="font-size: 11px; margin-bottom: 8px; font-weight: 700; color: #888;" id="shipping-msg">ADD RS 5,000 FOR FREE DELIVERY</p>
+                <div style="height: 4px; background: #eee; border-radius: 10px; overflow: hidden;">
+                    <div id="shipping-bar" style="height: 100%; width: 0%; background: #000; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+            <div class="cart-items" id="cart-items-container"></div>
+            <div class="cart-footer">
+                <div class="summary-line"><span>Subtotal</span><span id="cart-subtotal">Rs 0</span></div>
+                <div class="summary-line"><span>Delivery</span><span id="delivery-cost">Rs 250</span></div>
+                <div class="summary-line total"><span>Total</span><span id="cart-total">Rs 0</span></div>
+                <button class="checkout-btn" id="checkout-btn" style="background:#000; margin-top:20px;">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
     <script>
+        // Universal Loader Removal
+        function removeLoader() {
+            const loader = document.getElementById('luxe-loader');
+            if(loader) {
+                loader.classList.add('fade-out');
+                setTimeout(() => loader.style.display = 'none', 800);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
-            if(!id) { window.location.href = 'index.html'; return; }
 
-            // Loader Animation
-            setTimeout(() => {
-                const loader = document.getElementById('luxe-loader');
-                loader.classList.add('fade-out');
-            }, 800);
+            if(!id) {
+                console.error("No ID found");
+                removeLoader();
+                return;
+            }
 
             try {
-                const response = await fetch('upload.php');
-                const products = await response.json();
-                const p = products.find(x => x.id === id);
+                // First try to find in existing productsData if script.js loaded it
+                let foundProduct = null;
+                let allProducts = [];
 
-                if(p) renderPage(p, products);
-                else window.location.href = 'index.html';
-            } catch (e) {
-                console.error(e);
-                // Fallback if API fails but local storage or global data exists
-                if(typeof productsData !== 'undefined'){
-                     const p = productsData.find(x => x.id === id);
-                     if(p) renderPage(p, productsData);
+                const response = await fetch('upload.php');
+                if (response.ok) {
+                    allProducts = await response.json();
+                    foundProduct = allProducts.find(x => String(x.id) === String(id));
                 }
+
+                // Fallback to script.js data if not found in PHP
+                if (!foundProduct && typeof productsData !== 'undefined') {
+                    foundProduct = productsData.find(x => String(x.id) === String(id));
+                    allProducts = productsData;
+                }
+
+                if(foundProduct) {
+                    renderPage(foundProduct, allProducts);
+                } else {
+                    console.log("Product not found, showing default error state");
+                    document.getElementById('p-title').innerText = "Product Not Found";
+                    removeLoader();
+                }
+            } catch (e) {
+                console.error("Detailed Error:", e);
+                removeLoader();
             }
+
+            // Safety timeout to remove loader anyway
+            setTimeout(removeLoader, 2000);
         });
 
         function renderPage(p, all) {
-            document.title = `${p.name} | MK LUXURY`;
-            document.getElementById('p-title').innerText = p.name;
-            document.getElementById('s-title-val').innerText = p.name;
-            document.getElementById('p-category').innerText = (p.category || 'Luxury Collection').toUpperCase();
-
-            const price = parseInt(p.price);
-            document.getElementById('p-price').innerText = price.toLocaleString();
-            document.getElementById('s-price-val').innerText = 'Rs ' + price.toLocaleString();
-
-            const oldPrice = p.originalPrice || (price * 1.4);
-            document.getElementById('p-old-price').innerText = 'Rs ' + Math.round(oldPrice).toLocaleString();
-            document.getElementById('p-save').innerText = 'SAVE ' + Math.round(((oldPrice-price)/oldPrice)*100) + '%';
-
-            const mainImg = document.getElementById('main-image');
-            mainImg.src = p.image;
-            mainImg.alt = p.name;
-
-            if(p.description) document.getElementById('p-desc').innerText = p.description;
-
-            // Gallery Thumbnails (Simulated for single image, but prepared for multi)
-            const thumbContainer = document.getElementById('thumb-container');
-            thumbContainer.innerHTML = `
-                <div class="thumb active"><img src="${p.image}"></div>
-                <div class="thumb"><img src="${p.image}"></div>
-                <div class="thumb"><img src="${p.image}"></div>
-            `;
-
-            // Related Products (Filter by category if possible)
-            const related = all.filter(x => x.id !== p.id).sort(() => 0.5 - Math.random()).slice(0, 5);
-            document.getElementById('related-mount').innerHTML = related.map(item => `
-                <div class="curation-item" onclick="location.href='product-detail.html?id=${item.id}'">
-                    <div class="item-visual">
-                        <img src="${item.image}" loading="lazy">
-                        <div class="quick-view">+ Quick View</div>
-                    </div>
-                    <div class="item-info">
-                        <span class="item-cat">${item.category || 'MK LUXE'}</span>
-                        <h3 class="item-name">${item.name}</h3>
-                        <p class="item-price">Rs ${parseInt(item.price).toLocaleString()}</p>
-                    </div>
-                </div>
-            `).join('');
-
-            // Interaction logic
-            const qInput = document.getElementById('q-input');
-            document.getElementById('q-plus').onclick = () => {
-                qInput.value = parseInt(qInput.value) + 1;
-                updateSticky(price);
-            };
-            document.getElementById('q-minus').onclick = () => {
-                if(qInput.value > 1) {
-                    qInput.value = parseInt(qInput.value) - 1;
-                    updateSticky(price);
+            try {
+                // Image Path Correction
+                let fullImg = p.image;
+                if (fullImg && !fullImg.startsWith('http') && typeof IMAGE_BASE_URL !== 'undefined') {
+                    fullImg = IMAGE_BASE_URL + fullImg;
                 }
-            };
 
-            document.querySelectorAll('.add-to-cart-btn').forEach(b => {
-                b.setAttribute('data-product', p.id);
-                b.onclick = () => showToast();
-            });
+                document.title = `${p.name} | MK LUXURY`;
+                document.getElementById('p-title').innerText = p.name;
+                document.getElementById('s-title-val').innerText = p.name;
+                document.getElementById('p-category').innerText = (p.category || 'Luxury Collection').toUpperCase();
 
-            document.getElementById('p-wa-btn').onclick = () => {
-                const msg = `Greetings! I am interested in this masterpiece:\n\n*Product:* ${p.name}\n*Price:* Rs ${price.toLocaleString()}\n*Link:* ${window.location.href}\n\nPlease provide more details.`;
-                window.open(`https://wa.me/923000000000?text=${encodeURIComponent(msg)}`);
-            };
+                const price = parseInt(p.price) || 0;
+                document.getElementById('p-price').innerText = price.toLocaleString();
+                document.getElementById('s-price-val').innerText = 'Rs ' + price.toLocaleString();
 
-            // Scroll Header Effect
-            window.addEventListener('scroll', () => {
-                const header = document.getElementById('main-header');
-                const stickyBar = document.getElementById('sticky-bar');
+                const oldPrice = p.originalPrice || (price * 1.25);
+                document.getElementById('p-old-price').innerText = 'Rs ' + Math.round(oldPrice).toLocaleString();
+                document.getElementById('p-save').innerText = 'SAVE ' + Math.round(((oldPrice-price)/oldPrice)*100) + '%';
 
-                if(window.scrollY > 50) header.classList.add('scrolled');
-                else header.classList.remove('scrolled');
+                const mainImg = document.getElementById('main-image');
+                if(mainImg) {
+                    mainImg.src = fullImg;
+                    mainImg.alt = p.name;
+                    mainImg.onerror = function() { this.src = 'https://placehold.co/600x600?text=Product+Image'; };
+                }
 
-                if(window.scrollY > 600) stickyBar.classList.add('active');
-                else stickyBar.classList.remove('active');
-            });
+                if(p.description) document.getElementById('p-desc').innerText = p.description;
+
+                // Gallery Thumbnails
+                const thumbContainer = document.getElementById('thumb-container');
+                if(thumbContainer) {
+                    // Create multiple thumbs even if we only have one image, for luxury feel
+                    const thumbHtml = [fullImg, fullImg, fullImg].map((img, i) => `
+                        <div class="thumb ${i===0?'active':''}" onclick="updateHero('${img}', this)">
+                            <img src="${img}" onerror="this.src='https://placehold.co/100x100'">
+                        </div>
+                    `).join('');
+                    thumbContainer.innerHTML = thumbHtml;
+                }
+
+                // Related Products
+                const related = all.filter(x => String(x.id) !== String(p.id)).sort(() => 0.5 - Math.random()).slice(0, 5);
+                const relMount = document.getElementById('related-mount');
+                if(relMount) {
+                    relMount.innerHTML = related.map(item => {
+                        let relImg = item.image;
+                        if (relImg && !relImg.startsWith('http') && typeof IMAGE_BASE_URL !== 'undefined') {
+                            relImg = IMAGE_BASE_URL + relImg;
+                        }
+                        return `
+                            <div class="curation-item" onclick="location.href='product-detail.html?id=${item.id}'">
+                                <div class="item-visual">
+                                    <img src="${relImg}" loading="lazy" onerror="this.src='https://placehold.co/200x250'">
+                                    <div class="quick-view">+ View Piece</div>
+                                </div>
+                                <div class="item-info">
+                                    <span class="item-cat">${item.category || 'MK LUXE'}</span>
+                                    <h3 class="item-name">${item.name}</h3>
+                                    <p class="item-price">Rs ${parseInt(item.price).toLocaleString()}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Interaction logic
+                const qInput = document.getElementById('q-input');
+                const qPlus = document.getElementById('q-plus');
+                const qMinus = document.getElementById('q-minus');
+
+                if(qPlus) qPlus.onclick = () => { qInput.value = parseInt(qInput.value) + 1; updateSticky(price); };
+                if(qMinus) qMinus.onclick = () => { if(parseInt(qInput.value) > 1) { qInput.value = parseInt(qInput.value) - 1; updateSticky(price); } };
+
+                document.querySelectorAll('.add-to-cart-btn').forEach(b => {
+                    b.setAttribute('data-product', p.id);
+                    b.onclick = (e) => {
+                        e.preventDefault();
+                        if(typeof addToCart === 'function') {
+                            addToCart({
+                                id: p.id,
+                                name: p.name,
+                                price: price,
+                                image: fullImg,
+                                qty: parseInt(qInput.value)
+                            });
+                        }
+                        showToast();
+                    };
+                });
+
+                const waBtn = document.getElementById('p-wa-btn');
+                if(waBtn) waBtn.onclick = () => {
+                    const msg = `Greetings! I am interested in this masterpiece:\n\n*Product:* ${p.name}\n*Price:* Rs ${price.toLocaleString()}\n*Link:* ${window.location.href}`;
+                    window.open(`https://wa.me/923000000000?text=${encodeURIComponent(msg)}`);
+                };
+
+                removeLoader();
+            } catch (err) {
+                console.error("Render Error:", err);
+                removeLoader();
+            }
         }
+
+        function updateHero(src, el) {
+            document.getElementById('main-image').src = src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Zoom Logic
+        const stage = document.getElementById('main-stage');
+        const closeZoom = document.getElementById('close-zoom');
+
+        if(stage) stage.onclick = (e) => {
+            if(e.target.id === 'close-zoom' || e.target.closest('#close-zoom')) return;
+            stage.classList.toggle('zoom-active');
+            document.body.style.overflow = stage.classList.contains('zoom-active') ? 'hidden' : '';
+        };
+
+        if(closeZoom) closeZoom.onclick = (e) => {
+            e.stopPropagation();
+            stage.classList.remove('zoom-active');
+            document.body.style.overflow = '';
+        };
 
         function updateSticky(unitPrice) {
             const qty = parseInt(document.getElementById('q-input').value);
-            document.getElementById('s-price-val').innerText = 'Rs ' + (unitPrice * qty).toLocaleString();
+            const sVal = document.getElementById('s-price-val');
+            if(sVal) sVal.innerText = 'Rs ' + (unitPrice * qty).toLocaleString();
         }
 
         function showToast() {
             const toast = document.getElementById('toast');
-            toast.className = 'toast-show';
-            setTimeout(() => { toast.className = 'toast-hidden'; }, 3000);
+            if(toast) {
+                toast.className = 'toast-show';
+                setTimeout(() => { toast.className = 'toast-hidden'; }, 3000);
+            }
         }
+
+        // Scroll Effects
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            const stickyBar = document.getElementById('sticky-bar');
+            if(!header || !stickyBar) return;
+
+            if(window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+
+            if(window.scrollY > 600) stickyBar.classList.add('active');
+            else stickyBar.classList.remove('active');
+        });
     </script>
 </body>
 </html>

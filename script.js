@@ -499,14 +499,24 @@ function initCart() {
     });
 
     document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.add-to-cart-btn');
+        const btn = e.target.closest('.product-card .add-to-cart-btn');
         if (btn) {
-            const productCard = btn.closest('.product-card') || btn.closest('.product-info') || document;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const productCard = btn.closest('.product-card');
+            if (!productCard) return;
+
+            const name = productCard.querySelector('h3')?.textContent || 'Product';
+            const priceText = productCard.querySelector('.current-price')?.textContent || '0';
+            const price = parseInt(priceText.replace(/[^\d]/g, '')) || 0;
+            const image = productCard.querySelector('img')?.src || '';
+
             const product = {
                 id: btn.dataset.product,
-                name: productCard.querySelector('h3') ? productCard.querySelector('h3').textContent : 'Product',
-                price: parseInt(productCard.querySelector('.current-price').textContent.replace(/[^\d]/g, '')),
-                image: productCard.querySelector('img') ? productCard.querySelector('img').src : '',
+                name: name,
+                price: price,
+                image: image,
                 qty: 1
             };
             addToCart(product);
@@ -524,8 +534,10 @@ function initCart() {
 
 function addToCart(product) {
     const existingIndex = cart.findIndex(item => item.id === product.id);
+    const quantityToAdd = product.qty || 1;
+
     if (existingIndex > -1) {
-        cart[existingIndex].qty += 1;
+        cart[existingIndex].qty += quantityToAdd;
     } else {
         cart.push(product);
     }

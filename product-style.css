@@ -166,11 +166,17 @@ body.luxury-detail-page {
 
 .cart-dot {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 8px;
-    height: 8px;
+    top: -2px;
+    right: -2px;
+    width: 18px;
+    height: 18px;
     background: var(--luxe-gold);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    display: none; /* Managed by JS */
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
     border: 2px solid white;
 }
@@ -187,11 +193,50 @@ body.luxury-detail-page {
     padding-top: 80px;
 }
 
-.main-stage {
-    width: 100%;
-    aspect-ratio: 1/1.2;
-    position: relative;
-    overflow: hidden;
+/* Lightbox Effect */
+.main-stage.zoom-active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: auto;
+}
+
+.main-stage.zoom-active .hero-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.main-stage.zoom-active .zoom-hint {
+    background: var(--luxe-gold);
+}
+
+.close-zoom {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    box-shadow: var(--shadow-md);
+}
+
+.main-stage.zoom-active .close-zoom {
+    display: flex;
 }
 
 .hero-img {
@@ -703,11 +748,12 @@ details[open] .acc-icon { transform: rotate(-135deg); margin-bottom: -5px; }
     color: white;
     padding: 15px 30px;
     border-radius: 50px;
-    z-index: 2000;
+    z-index: 9999;
     font-weight: 600;
     font-size: 0.9rem;
     box-shadow: var(--shadow-lg);
-    transition: all 0.4s;
+    border: 1px solid var(--luxe-gold);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .toast-hidden { opacity: 0; visibility: hidden; transform: translate(-50%, -20px) !important; }
