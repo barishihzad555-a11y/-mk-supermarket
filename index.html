@@ -81,11 +81,17 @@
                 const banners = await bannerRes.json();
                 if(Array.isArray(banners) && banners.length > 0) {
                     const slider = document.getElementById('main-slider');
-                    slider.innerHTML = banners.map((b, i) => `
+                    slider.innerHTML = banners.map((b, i) => {
+                        // Fix image path if it starts with uploads/
+                        let imgUrl = b.image;
+                        if(imgUrl && !imgUrl.startsWith('http')) {
+                            imgUrl = imgUrl.startsWith('/') ? imgUrl.substring(1) : imgUrl;
+                        }
+                        return `
                         <div class="slide ${i === 0 ? 'active' : ''}">
-                            <img src="${b.image}" alt="${b.title}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} onerror="this.src='https://placehold.co/800x300?text=Banner'">
-                        </div>
-                    `).join('');
+                            <img src="${imgUrl}" alt="${b.title}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} onerror="this.src='https://placehold.co/800x300?text=Banner'">
+                        </div>`;
+                    }).join('');
                 }
 
                 // Fetch Products
@@ -94,10 +100,17 @@
                 const container = document.getElementById('products-container');
 
                 if(Array.isArray(products) && products.length > 0) {
-                    container.innerHTML = products.map(p => `
+                    container.innerHTML = products.map(p => {
+                        // Process product image
+                        let imgUrl = (p.images && p.images[0]) ? p.images[0] : 'https://placehold.co/200x200?text=Product';
+                        if(imgUrl && !imgUrl.startsWith('http')) {
+                            imgUrl = imgUrl.startsWith('/') ? imgUrl.substring(1) : imgUrl;
+                        }
+
+                        return `
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="${p.images && p.images[0] ? p.images[0] : 'https://placehold.co/200x200?text=Product'}" alt="${p.name}" loading="lazy">
+                                <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='https://placehold.co/200x200?text=Error'">
                                 ${p.onSale ? '<span class="discount-badge">SALE</span>' : ''}
                             </div>
                             <div class="product-info">
@@ -112,13 +125,13 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    `).join('');
+                        </div>`;
+                    }).join('');
                 } else {
                     container.innerHTML = '<p style="text-align:center; width:100%; padding: 20px;">No products available.</p>';
                 }
             } catch (err) {
-                console.log('Static preview mode.');
+                console.log('Error loading data:', err);
             }
         }
         document.addEventListener('DOMContentLoaded', loadWebsiteData);

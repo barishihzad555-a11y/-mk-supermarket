@@ -1,42 +1,43 @@
 <?php
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 
-// تصاویر محفوظ کرنے کے لیے فولڈرز
 $targetDir = "../uploads/";
+
+// Create folders with full permissions
 if (!file_exists($targetDir)) {
     mkdir($targetDir, 0777, true);
+    chmod($targetDir, 0777);
 }
 
-// فولڈر کا نام (products یا banners)
-$folder = isset($_POST['folder']) ? $_POST['folder'] : (isset($_POST['type']) ? $_POST['type'] : 'general');
+$folder = $_POST['folder'] ?? 'products';
 $uploadPath = $targetDir . $folder . "/";
+
 if (!file_exists($uploadPath)) {
     mkdir($uploadPath, 0777, true);
+    chmod($uploadPath, 0777);
 }
 
-// فائل کو چیک کریں (file یا image دونوں ناموں کو سپورٹ کرتا ہے)
 $fileKey = isset($_FILES['file']) ? 'file' : (isset($_FILES['image']) ? 'image' : null);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $fileKey) {
     $file = $_FILES[$fileKey];
-    $fileName = time() . '_' . basename($file['name']);
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $fileName = time() . '_' . uniqid() . '.webp'; // Force webp extension
     $targetFilePath = $uploadPath . $fileName;
 
     if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-        $host = $_SERVER['HTTP_HOST'];
+        chmod($targetFilePath, 0644); // Make file readable by everyone
 
-        // راستہ درست کریں تاکہ ویب سائٹ سے ایکسیس ہو سکے
-        $publicUrl = $protocol . "://" . $host . "/uploads/" . $folder . "/" . $fileName;
-
+        // Return relative path for better stability
         echo json_encode([
             "status" => "success",
-            "url" => $publicUrl
+            "url" => "uploads/" . $folder . "/" . $fileName
         ]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Could not save file"]);
+        echo json_encode(["status" => "error", "message" => "Permission denied on server"]);
     }
 } else {
-    echo json_encode(["status" => "error", "message" => "No file received"]);
+    echo json_encode(["status" => "error", "message" => "No file uploaded"]);
 }
 ?>
