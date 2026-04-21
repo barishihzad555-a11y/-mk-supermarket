@@ -442,40 +442,39 @@ section {
     opacity: 0.9;
 }
 
-@media (max-width: 767px) {
+/* Optimized Product Grid for All Screens */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+
+@media (min-width: 768px) {
     .products-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin: 0;
-    }
-
-    .product-card {
-        border-radius: 12px;
-        width: 100%;
-    }
-
-    .product-image {
-        height: 120px;
-    }
-
-    .product-info {
-        padding: 10px;
-    }
-
-    .product-info h3 {
-        font-size: 12px;
-    }
-
-    .current-price {
-        font-size: 13px;
-    }
-
-    .add-to-cart-btn {
-        padding: 5px 10px;
-        font-size: 10px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
     }
 }
+
+@media (min-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Fix for Flash Sale design on mobile */
+@media (max-width: 767px) {
+    .flash-sale {
+        padding: 15px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    .flash-sale .section-header h2 {
+        font-size: 18px !important;
+    }
+}
+
 
 /* Flash Products Horizontal Scroll Optimization */
 .flash-products {
