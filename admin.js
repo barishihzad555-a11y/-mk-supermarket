@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Load existing products on start
+    loadProducts();
+
     // Image Preview Logic
     const imageInput = document.getElementById('product-image');
     const imagePreview = document.getElementById('image-preview');
@@ -54,10 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData();
         const fileInput = document.getElementById('product-image');
+        const nameInput = document.querySelector('input[placeholder="e.g. Fresh Milk"]');
+        const priceInput = document.querySelector('input[placeholder="0.00"]');
+        const stockInput = document.querySelector('input[placeholder="0"]');
+        const categoryInput = document.getElementById('product-category');
+
         formData.append('product_image', fileInput.files[0]);
+        formData.append('name', nameInput.value);
+        formData.append('price', priceInput.value);
+        formData.append('stock', stockInput.value);
+        formData.append('category', categoryInput.value);
 
         try {
-            // 1. Upload Image to Hostinger via PHP
+            // 1. Upload Image and Data to Hostinger via PHP
             const response = await fetch('upload.php', {
                 method: 'POST',
                 body: formData
@@ -65,20 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                const imageUrl = result.url; // This is the path on Hostinger
+                // Add to UI
+                addProductToUI(result.product);
 
-                // 2. Here you would normally save other product details + imageUrl to a database
-                console.log('Image uploaded to:', imageUrl);
-
-                // Add to UI (Mock)
-                addProductToUI({
-                    name: document.querySelector('input[placeholder="e.g. Fresh Milk"]').value,
-                    price: document.querySelector('input[placeholder="0.00"]').value,
-                    stock: document.querySelector('input[placeholder="0"]').value,
-                    image: imageUrl
-                });
-
-                alert('Product & Image saved successfully to Hostinger!');
+                alert('Product saved successfully!');
                 addProductModal.style.display = 'none';
                 productForm.reset();
                 previewContainer.style.display = 'none';
@@ -94,6 +96,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    async function loadProducts() {
+        try {
+            const response = await fetch('upload.php');
+            const products = await response.json();
+            const grid = document.querySelector('.product-grid-admin');
+
+            // Keep the hardcoded one if you want, or clear first:
+            // grid.innerHTML = '';
+
+            products.forEach(product => {
+                addProductToUI(product);
+            });
+        } catch (error) {
+            console.error('Error loading products:', error);
+        }
+    }
+
     function addProductToUI(product) {
         const grid = document.querySelector('.product-grid-admin');
         const item = document.createElement('div');
@@ -102,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="${product.image}" alt="${product.name}">
             <div class="product-details">
                 <h4>${product.name}</h4>
-                <p>$${product.price} • ${product.stock} in stock</p>
+                <p>Rs ${product.price} • ${product.stock} in stock</p>
             </div>
             <div class="product-actions">
                 <button class="btn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>

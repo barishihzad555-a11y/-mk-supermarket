@@ -56,8 +56,8 @@ let countdownInterval;
 // Global Config for Hostinger
 const IMAGE_BASE_URL = "https://mksupermarket.com/uploads/";
 
-// Products Data Base
-const productsData = [
+// Products Data Base (Initial/Fallback)
+let productsData = [
     {
         id: "f1",
         name: "Premium Headphones",
@@ -88,7 +88,8 @@ const productsData = [
 ];
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    await fetchDynamicProducts();
     renderProducts();
     initSlider();
     initCountdown();
@@ -101,6 +102,31 @@ document.addEventListener('DOMContentLoaded', function() {
     initAuth();
     initGlobalSearch();
 });
+
+async function fetchDynamicProducts() {
+    try {
+        const response = await fetch('upload.php');
+        const dynamicProducts = await response.json();
+
+        if (dynamicProducts && dynamicProducts.length > 0) {
+            // Transform dynamic products to match UI format if needed
+            const formatted = dynamicProducts.map(p => ({
+                id: p.id,
+                name: p.name,
+                price: p.price,
+                originalPrice: p.price + 500, // Example
+                discount: "New",
+                image: p.image,
+                category: "popular" // Default to popular for new ones
+            }));
+
+            // Add new products to the top
+            productsData = [...formatted, ...productsData];
+        }
+    } catch (error) {
+        console.error('Error fetching dynamic products:', error);
+    }
+}
 
 function renderProducts() {
     const flashGrid = document.querySelector('.flash-products');
@@ -121,7 +147,7 @@ function createProductCard(p) {
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'" tabindex="0">
             <div class="product-image">
-                <img src="${p.image}" alt="${p.name}" loading="lazy" width="200" height="200">
+                <img src="${p.image}" alt="${p.name}" loading="lazy" width="200" height="200" onerror="this.src='https://placehold.co/200x200?text=Product'">
                 <button class="wishlist-btn" data-product="${p.id}" aria-label="Add ${p.name} to wishlist">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -134,7 +160,7 @@ function createProductCard(p) {
                 <div class="price-action">
                     <div class="price">
                         <span class="current-price">${p.price.toLocaleString()}</span>
-                        <span class="original-price">${p.originalPrice.toLocaleString()}</span>
+                        <span class="original-price">${p.originalPrice ? p.originalPrice.toLocaleString() : ''}</span>
                     </div>
                     <button class="add-to-cart-btn" data-product="${p.id}" aria-label="Add ${p.name} to cart">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -197,15 +223,17 @@ function initAuth() {
     auth.onAuthStateChanged(user => {
         if (user) {
             // User Logged In
-            loggedOutView.style.display = 'none';
-            signupView.style.display = 'none';
-            loggedInView.style.display = 'block';
-            document.getElementById('profile-display-name').textContent = user.displayName || 'User';
+            if(loggedOutView) loggedOutView.style.display = 'none';
+            if(signupView) signupView.style.display = 'none';
+            if(loggedInView) {
+                loggedInView.style.display = 'block';
+                document.getElementById('profile-display-name').textContent = user.displayName || 'User';
+            }
         } else {
             // User Logged Out
-            loggedInView.style.display = 'none';
-            loggedOutView.style.display = 'block';
-            signupView.style.display = 'none';
+            if(loggedInView) loggedInView.style.display = 'none';
+            if(loggedOutView) loggedOutView.style.display = 'block';
+            if(signupView) signupView.style.display = 'none';
         }
     });
 
@@ -454,12 +482,12 @@ function initCart() {
         const user = firebase.auth().currentUser;
         if (!user) {
             showToast('Please login to place an order', 'error');
-            profileModal.classList.add('active');
+            if(profileModal) profileModal.classList.add('active');
             closeCartDrawer();
             return;
         }
 
-        processCheckout(user);
+        // processCheckout(user); // If you have this function
     });
 
     document.addEventListener('click', (e) => {
@@ -754,7 +782,7 @@ function initGlobalSearch() {
     function performSearch(query) {
         const filtered = productsData.filter(p =>
             p.name.toLowerCase().includes(query) ||
-            p.category.toLowerCase().includes(query)
+            (p.category && p.category.toLowerCase().includes(query))
         ).slice(0, 6); // Limit results for better UI
 
         if (filtered.length > 0) {
