@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const products = await response.json();
             const grid = document.querySelector('.product-grid-admin');
 
-            // Keep the hardcoded one if you want, or clear first:
-            // grid.innerHTML = '';
+            // Clear the grid to remove hardcoded or old items
+            grid.innerHTML = '';
 
             products.forEach(product => {
                 addProductToUI(product);
@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.querySelector('.product-grid-admin');
         const item = document.createElement('div');
         item.className = 'product-item-admin';
+        item.setAttribute('data-id', product.id);
         item.innerHTML = `
             <img src="${product.image}" alt="${product.name}">
             <div class="product-details">
@@ -125,9 +126,37 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="product-actions">
                 <button class="btn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                <button class="btn-icon delete"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                <button class="btn-icon delete" onclick="deleteProduct('${product.id}', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
             </div>
         `;
         grid.prepend(item);
     }
+
+    window.deleteProduct = async function(id, btn) {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+
+        const formData = new FormData();
+        formData.append('action', 'delete');
+        formData.append('id', id);
+
+        try {
+            const response = await fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                const item = btn.closest('.product-item-admin');
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.9)';
+                setTimeout(() => item.remove(), 300);
+            } else {
+                alert('Delete failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert('An error occurred during deletion.');
+        }
+    };
 });
