@@ -54,7 +54,7 @@ let wishlist = new Set();
 let countdownInterval;
 
 // Global Config for Hostinger
-const IMAGE_BASE_URL = "https://mksupermarket.com/uploads/";
+const IMAGE_BASE_URL = window.location.origin + "/";
 
 // Products Data Base (Initial/Fallback)
 let productsData = [
@@ -64,7 +64,7 @@ let productsData = [
         price: 1499,
         originalPrice: 2199,
         discount: "-30%",
-        image: "uploads/products/headphone-p1.webp",
+        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
         category: "flash"
     },
     {
@@ -73,7 +73,7 @@ let productsData = [
         price: 799,
         originalPrice: 1099,
         discount: "-25%",
-        image: "uploads/products/mouse-p2.webp",
+        image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
         category: "flash"
     },
     {
@@ -82,7 +82,7 @@ let productsData = [
         price: 24999,
         originalPrice: 34999,
         discount: "-15%",
-        image: "uploads/products/watch-p3.webp",
+        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
         category: "popular"
     }
 ];
@@ -109,16 +109,24 @@ async function fetchDynamicProducts() {
         const dynamicProducts = await response.json();
 
         if (dynamicProducts && dynamicProducts.length > 0) {
-            // Transform dynamic products to match UI format if needed
-            const formatted = dynamicProducts.map(p => ({
-                id: p.id,
-                name: p.name,
-                price: p.price,
-                originalPrice: p.price + 500, // Example
-                discount: "New",
-                image: p.image,
-                category: "popular" // Default to popular for new ones
-            }));
+            // Transform dynamic products to match UI format
+            const formatted = dynamicProducts.map(p => {
+                // Ensure image path is correct
+                let fullImagePath = p.image;
+                if (!p.image.startsWith('http')) {
+                    fullImagePath = IMAGE_BASE_URL + p.image;
+                }
+
+                return {
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    originalPrice: p.price + (p.price * 0.2), // Auto estimate original price
+                    discount: "New",
+                    image: fullImagePath,
+                    category: p.category === 'Flash Sale' ? 'flash' : 'popular'
+                };
+            });
 
             // Add new products to the top
             productsData = [...formatted, ...productsData];
@@ -134,16 +142,12 @@ function renderProducts() {
 
     if (flashGrid) {
         const flashProducts = productsData.filter(p => p.category === 'flash');
-        if (flashProducts.length > 0) {
-            flashGrid.innerHTML = flashProducts.map(p => createProductCard(p)).join('');
-        }
+        flashGrid.innerHTML = flashProducts.map(p => createProductCard(p)).join('');
     }
 
     if (popularGrid) {
         const popularProducts = productsData.filter(p => p.category === 'popular');
-        if (popularProducts.length > 0) {
-            popularGrid.innerHTML = popularProducts.map(p => createProductCard(p)).join('');
-        }
+        popularGrid.innerHTML = popularProducts.map(p => createProductCard(p)).join('');
     }
 }
 
