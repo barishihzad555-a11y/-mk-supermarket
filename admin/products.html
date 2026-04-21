@@ -238,9 +238,16 @@
         // Load Products
         async function loadProducts() {
             const products = await window.api.list('products');
-            productsTableBody.innerHTML = products.map(p => `
+            productsTableBody.innerHTML = products.map(p => {
+                let imgPath = (p.images && p.images[0]) ? p.images[0] : '';
+                // Fix path for admin panel: images are one level up
+                if (imgPath && !imgPath.startsWith('http')) {
+                    imgPath = '../' + imgPath.replace(/^\/+/, '');
+                }
+
+                return `
                 <tr>
-                    <td><img src="${p.images ? p.images[0] : ''}" style="width:50px; height:50px; object-fit:cover; border-radius: 5px;"></td>
+                    <td><img src="${imgPath}" style="width:50px; height:50px; object-fit:cover; border-radius: 5px;" onerror="this.src='https://placehold.co/50x50?text=Err'"></td>
                     <td>${p.name}</td>
                     <td>${p.category}</td>
                     <td>Rs. ${p.price}</td>
@@ -253,7 +260,7 @@
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         // Save Product
