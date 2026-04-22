@@ -143,10 +143,14 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Ensure image path is correct
+    // Ensure image path is correct - matching product-detail logic
     let imagePath = p.image;
-    if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('uploads/')) {
-        imagePath = 'uploads/' + imagePath;
+    if (imagePath && !imagePath.startsWith('http')) {
+        if (!imagePath.startsWith('uploads/')) {
+            imagePath = 'uploads/' + imagePath;
+        }
+    } else if (!imagePath) {
+        imagePath = 'https://placehold.co/400x400?text=No+Image';
     }
 
     return `
