@@ -695,6 +695,8 @@ section {
     height: 100%;
     object-fit: cover;
     transition: transform 0.6s ease;
+    opacity: 1 !important; /* Ensure visibility */
+    visibility: visible !important; /* Ensure visibility */
 }
 
 .product-card:hover .product-image img {
@@ -2220,6 +2222,8 @@ section {
     visibility: visible !important;
     transition: transform 0.6s ease, opacity 0.3s ease;
     display: block !important;
+    min-height: 50px;
+    min-width: 50px;
 }
 
 .product-card .product-image {
