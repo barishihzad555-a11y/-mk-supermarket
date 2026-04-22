@@ -2216,14 +2216,21 @@ section {
     }
 }
 
-/* Guaranteed Visibility for Images */
+/* Guaranteed Visibility for Images - Fixed for Homepage */
 .product-image img {
     opacity: 1 !important;
     visibility: visible !important;
     transition: transform 0.6s ease, opacity 0.3s ease;
     display: block !important;
-    min-height: 50px;
-    min-width: 50px;
+    min-height: 100px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Remove any hiding during loading */
+.product-image img[loading],
+.product-image img:not(.loaded) {
+    opacity: 1 !important;
 }
 
 .product-card .product-image {
