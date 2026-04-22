@@ -143,9 +143,13 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Ensure image path is correct - matching product-detail logic
+    // Smart path logic to prevent double "uploads/" or missing prefix
     let imagePath = p.image;
     if (imagePath && !imagePath.startsWith('http')) {
+        // Remove leading slashes or ./ if they exist
+        imagePath = imagePath.replace(/^(\.\/|\/)/, '');
+
+        // Add uploads/ only if not already present
         if (!imagePath.startsWith('uploads/')) {
             imagePath = 'uploads/' + imagePath;
         }
@@ -156,7 +160,7 @@ function createProductCard(p) {
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
             <div class="product-image">
-                <img src="${imagePath}" alt="${p.name}" loading="eager" onerror="this.src='https://placehold.co/400x400?text=Image+Not+Found'">
+                <img src="${imagePath}" alt="${p.name}" loading="eager" onerror="handleImgError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
@@ -177,6 +181,34 @@ function createProductCard(p) {
         </div>
     `;
 }
+
+// Handle image errors gracefully
+function handleImageError(img) {
+    console.log("Image load failed:", img.src);
+    // Try without uploads/ if it was added
+    if (img.src.includes('uploads/uploads/')) {
+        img.src = img.src.replace('uploads/uploads/', 'uploads/');
+        return;
+    }
+    img.onerror = null; // Prevent infinite loop
+    img.src = 'https://placehold.co/400x400?text=Photo+Coming+Soon';
+}
+
+// Global Image Error Handler to catch path issues
+window.handleImgError = function(img) {
+    console.log("Fixing image path for:", img.src);
+    const currentSrc = img.getAttribute('src');
+
+    // If it failed with uploads/ prefix, try without it or vice versa
+    if (currentSrc.includes('uploads/uploads/')) {
+        img.src = currentSrc.replace('uploads/uploads/', 'uploads/');
+    } else if (!currentSrc.startsWith('uploads/') && !currentSrc.startsWith('http')) {
+        img.src = 'uploads/' + currentSrc;
+    } else {
+        img.onerror = null;
+        img.src = 'https://placehold.co/400x400?text=Image+Missing';
+    }
+};
 
 // --- Cart Logic ---
 window.addToCart = function(id) {
