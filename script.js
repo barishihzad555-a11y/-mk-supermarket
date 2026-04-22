@@ -7,52 +7,47 @@ document.addEventListener('DOMContentLoaded', function() {
     initApp();
 });
 
-async function initApp() {
-    await loadBanners();
-    await loadProducts();
+function initApp() {
+    loadProducts();
+    initBanners();
     initFlashSaleTimer();
     updateCartBadge();
 
-    // Auto refresh data every 30 seconds
-    setInterval(loadProducts, 30000);
+    // Auto refresh data every few seconds
+    setInterval(loadProducts, 5000);
 }
 
 // --- Banner Slider System ---
-async function loadBanners() {
+function initBanners() {
     const container = document.getElementById('main-banner-container');
     const dotsContainer = document.querySelector('.slider-dots');
     if (!container) return;
 
-    try {
-        const response = await fetch('upload.php?action=get_banners');
-        const banners = await response.json();
+    const banners = JSON.parse(localStorage.getItem('site_banners') || '[]');
 
-        // Default banner if none exists
-        const defaultBanners = [{image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80'}];
-        const activeBanners = banners.length > 0 ? banners : defaultBanners;
+    // Default banner if none exists
+    const defaultBanners = [{image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80'}];
+    const activeBanners = banners.length > 0 ? banners : defaultBanners;
 
-        container.innerHTML = '';
-        if (dotsContainer) dotsContainer.innerHTML = '';
+    container.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
 
-        activeBanners.forEach((banner, i) => {
-            const slide = document.createElement('div');
-            slide.className = `slide ${i === 0 ? 'active' : ''}`;
-            slide.innerHTML = `<img src="${banner.image}" alt="Banner ${i+1}">`;
-            container.appendChild(slide);
+    activeBanners.forEach((banner, i) => {
+        const slide = document.createElement('div');
+        slide.className = `slide ${i === 0 ? 'active' : ''}`;
+        slide.innerHTML = `<img src="${banner.image}" alt="Banner ${i+1}">`;
+        container.appendChild(slide);
 
-            if (dotsContainer && activeBanners.length > 1) {
-                const dot = document.createElement('span');
-                dot.className = `dot ${i === 0 ? 'active' : ''}`;
-                dot.onclick = () => goToSlide(i);
-                dotsContainer.appendChild(dot);
-            }
-        });
-
-        if (activeBanners.length > 1) {
-            startAutoSlide(activeBanners.length);
+        if (dotsContainer && activeBanners.length > 1) {
+            const dot = document.createElement('span');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
         }
-    } catch (error) {
-        console.error('Error loading banners:', error);
+    });
+
+    if (activeBanners.length > 1) {
+        startAutoSlide(activeBanners.length);
     }
 }
 
@@ -115,6 +110,12 @@ async function loadProducts() {
         renderProducts();
     } catch (error) {
         console.error('Error loading products:', error);
+        // Fallback to local storage if server fails
+        const rawData = localStorage.getItem('temp_products');
+        if (rawData) {
+            productsData = JSON.parse(rawData);
+            renderProducts();
+        }
     }
 }
 
