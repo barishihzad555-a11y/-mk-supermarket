@@ -65,14 +65,55 @@ try {
 
         $image_path = ($itemIndex !== -1) ? $data[$itemIndex]['image'] : '';
 
+        // Function to compress and resize image
+        function processImage($source, $dest, $quality, $targetWidth = 800) {
+            $info = getimagesize($source);
+            if ($info === false) return false;
+
+            $img = null;
+            if ($info['mime'] == 'image/jpeg') $img = imagecreatefromjpeg($source);
+            elseif ($info['mime'] == 'image/png') $img = imagecreatefrompng($source);
+            elseif ($info['mime'] == 'image/webp') $img = imagecreatefromwebp($source);
+
+            if (!$img) return false;
+
+            // Resize if wider than target
+            $width = $info[0];
+            $height = $info[1];
+            if ($width > $targetWidth) {
+                $newWidth = $targetWidth;
+                $newHeight = ($height / $width) * $newWidth;
+                $tmp = imagecreatetruecolor($newWidth, $newHeight);
+
+                // Maintain transparency for PNG/WebP
+                imagealphablending($tmp, false);
+                imagesavealpha($tmp, true);
+
+                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                $img = $tmp;
+            }
+
+            // Save as WebP for best compression
+            $result = imagewebp($img, $dest, $quality);
+            imagedestroy($img);
+            return $result;
+        }
+
         // Case 1: Normal File Upload
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            $filename = $type . "_" . uniqid() . "." . $ext;
+            $temp_file = $_FILES['image']['tmp_name'];
+            $filename = $type . "_" . uniqid() . ".webp";
             $target_file = $target_dir . $filename;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+
+            if (processImage($temp_file, $target_file, 80)) {
                 if ($image_path && file_exists($image_path)) unlink($image_path);
                 $image_path = $target_file;
+            } else {
+                // Fallback if processing fails
+                if (move_uploaded_file($temp_file, $target_file)) {
+                    if ($image_path && file_exists($image_path)) unlink($image_path);
+                    $image_path = $target_file;
+                }
             }
         }
         // Case 2: Base64 Upload (Cropped Banners)

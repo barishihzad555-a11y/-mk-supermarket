@@ -2217,12 +2217,9 @@ section {
 /* Loading States */
 .product-image img {
     transition: opacity 0.3s ease;
+    opacity: 1; /* Ensure images are visible */
 }
 
-.product-image img[loading] {
-    opacity: 0;
-}
-
-.product-image img[loaded] {
+.product-image img.loaded {
     opacity: 1;
 }
