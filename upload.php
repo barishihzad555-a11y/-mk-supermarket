@@ -6,93 +6,104 @@ if (!file_exists($target_dir)) {
     mkdir($target_dir, 0777, true);
 }
 
-$json_file = 'products.json';
-
-// Function to get products
-function getProducts($json_file) {
-    if (file_exists($json_file)) {
-        return json_decode(file_get_contents($json_file), true) ?: [];
+// Function to get data
+function getData($file) {
+    if (file_exists($file)) {
+        return json_decode(file_get_contents($file), true) ?: [];
     }
     return [];
 }
 
-// Function to save products
-function saveProducts($json_file, $products) {
-    file_put_contents($json_file, json_encode(array_values($products), JSON_PRETTY_PRINT));
+// Function to save data
+function saveData($file, $data) {
+    file_put_contents($file, json_encode(array_values($data), JSON_PRETTY_PRINT));
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
+$action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 if ($method === 'POST') {
-    // Handle Delete Action
-    if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
-        $id = $_POST['id'];
-        $products = getProducts($json_file);
-        $found = false;
+    // --- PRODUCT ACTIONS ---
+    if ($action === 'upload_product' || isset($_FILES['product_image'])) {
+        $file = $_FILES['product_image'];
+        $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $new_filename = 'prod_' . uniqid() . '.' . $file_extension;
+        $target_file = $target_dir . $new_filename;
 
-        foreach ($products as $key => $product) {
-            if ($product['id'] === $id) {
-                // Delete image file
-                if (file_exists($product['image'])) {
-                    unlink($product['image']);
-                }
+        if (move_uploaded_file($file['tmp_name'], $target_file)) {
+            $newProduct = [
+                "id" => uniqid(),
+                "name" => $_POST['name'] ?? 'New Product',
+                "price" => (int)($_POST['price'] ?? 0),
+                "stock" => (int)($_POST['stock'] ?? 0),
+                "category" => $_POST['category'] ?? 'popular',
+                "image" => $target_file,
+                "timestamp" => time()
+            ];
+            $products = getData('products.json');
+            $products[] = $newProduct;
+            saveData('products.json', $products);
+            echo json_encode(["status" => "success", "product" => $newProduct]);
+        }
+        exit;
+    }
+
+    if ($action === 'delete_product') {
+        $id = $_POST['id'];
+        $products = getData('products.json');
+        foreach ($products as $key => $p) {
+            if ($p['id'] === $id) {
+                if (file_exists($p['image'])) unlink($p['image']);
                 unset($products[$key]);
-                $found = true;
                 break;
             }
         }
+        saveData('products.json', $products);
+        echo json_encode(["status" => "success"]);
+        exit;
+    }
 
-        if ($found) {
-            saveProducts($json_file, $products);
-            echo json_encode(["status" => "success", "message" => "Product deleted successfully"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Product not found"]);
+    // --- BANNER ACTIONS ---
+    if ($action === 'upload_banner') {
+        $data = $_POST['image']; // Base64 from cropper
+        if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
+            $data = substr($data, strpos($data, ',') + 1);
+            $type = strtolower($type[1]);
+            $data = base64_decode($data);
+            $filename = 'banner_' . uniqid() . '.' . $type;
+            $target_file = $target_dir . $filename;
+
+            if (file_put_contents($target_file, $data)) {
+                $banners = getData('banners.json');
+                $newBanner = ["id" => uniqid(), "image" => $target_file];
+                $banners[] = $newBanner;
+                saveData('banners.json', $banners);
+                echo json_encode(["status" => "success", "banner" => $newBanner]);
+            }
         }
         exit;
     }
 
-    // Handle Upload Action
-    if (isset($_FILES['product_image'])) {
-        $file = $_FILES['product_image'];
-        $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $new_filename = uniqid() . '.' . $file_extension;
-        $target_file = $target_dir . $new_filename;
-
-        $check = getimagesize($file['tmp_name']);
-        if($check !== false) {
-            if (move_uploaded_file($file['tmp_name'], $target_file)) {
-                $newProduct = [
-                    "id" => uniqid(),
-                    "name" => $_POST['name'] ?? 'New Product',
-                    "price" => (int)($_POST['price'] ?? 0),
-                    "stock" => (int)($_POST['stock'] ?? 0),
-                    "category" => $_POST['category'] ?? 'Groceries',
-                    "image" => $target_file,
-                    "timestamp" => time()
-                ];
-
-                $products = getProducts($json_file);
-                $products[] = $newProduct;
-                saveProducts($json_file, $products);
-
-                echo json_encode([
-                    "status" => "success",
-                    "message" => "Product and Image saved successfully",
-                    "url" => $target_file,
-                    "product" => $newProduct
-                ]);
-            } else {
-                echo json_encode(["status" => "error", "message" => "Failed to move uploaded file."]);
+    if ($action === 'delete_banner') {
+        $id = $_POST['id'];
+        $banners = getData('banners.json');
+        foreach ($banners as $key => $b) {
+            if ($b['id'] === $id) {
+                if (file_exists($b['image'])) unlink($b['image']);
+                unset($banners[$key]);
+                break;
             }
-        } else {
-            echo json_encode(["status" => "error", "message" => "File is not an image."]);
         }
+        saveData('banners.json', $banners);
+        echo json_encode(["status" => "success"]);
         exit;
     }
 } else if ($method === 'GET') {
-    echo json_encode(getProducts($json_file));
+    if ($action === 'get_banners') {
+        echo json_encode(getData('banners.json'));
+    } else {
+        echo json_encode(getData('products.json'));
+    }
     exit;
 }
-
-echo json_encode(["status" => "error", "message" => "Invalid request."]);
 ?>

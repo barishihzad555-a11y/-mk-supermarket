@@ -72,16 +72,18 @@
                     </div>
                 </div>
 
-                <h1 class="p-title" id="p-title">Defining Excellence...</h1>
+                <div class="p-title-price-row">
+                    <h1 class="p-title" id="p-title">Defining Excellence...</h1>
 
-                <div class="p-pricing-v2">
-                    <div class="price-wrap">
-                        <span class="currency">Rs</span>
-                        <span class="amount" id="p-price">0</span>
-                    </div>
-                    <div class="old-price-wrap">
-                        <span class="old-amount" id="p-old-price">Rs 0</span>
-                        <span class="discount-pill" id="p-save">SAVE 20%</span>
+                    <div class="p-pricing-v2">
+                        <div class="price-wrap">
+                            <span class="currency">Rs</span>
+                            <span class="amount" id="p-price">0</span>
+                        </div>
+                        <div class="old-price-wrap">
+                            <span class="old-amount" id="p-old-price">Rs 0</span>
+                            <span class="discount-pill" id="p-save">SAVE 20%</span>
+                        </div>
                     </div>
                 </div>
 
@@ -265,26 +267,27 @@
             }
 
             try {
-                // First try to find in existing productsData if script.js loaded it
                 let foundProduct = null;
                 let allProducts = [];
 
-                const response = await fetch('upload.php');
-                if (response.ok) {
-                    allProducts = await response.json();
-                    foundProduct = allProducts.find(x => String(x.id) === String(id));
-                }
+                // 1. Try Local Storage first (for Admin uploads in local mode)
+                const localData = JSON.parse(localStorage.getItem('temp_products') || '[]');
+                foundProduct = localData.find(x => String(x.id) === String(id));
+                allProducts = localData;
 
-                // Fallback to script.js data if not found in PHP
-                if (!foundProduct && typeof productsData !== 'undefined') {
-                    foundProduct = productsData.find(x => String(x.id) === String(id));
-                    allProducts = productsData;
+                // 2. Fallback to PHP if not in local storage
+                if (!foundProduct) {
+                    const response = await fetch('upload.php');
+                    if (response.ok) {
+                        const dbProducts = await response.json();
+                        foundProduct = dbProducts.find(x => String(x.id) === String(id));
+                        allProducts = dbProducts;
+                    }
                 }
 
                 if(foundProduct) {
                     renderPage(foundProduct, allProducts);
                 } else {
-                    console.log("Product not found, showing default error state");
                     document.getElementById('p-title').innerText = "Product Not Found";
                     removeLoader();
                 }
@@ -293,7 +296,6 @@
                 removeLoader();
             }
 
-            // Safety timeout to remove loader anyway
             setTimeout(removeLoader, 2000);
         });
 

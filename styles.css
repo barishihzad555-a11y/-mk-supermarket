@@ -298,6 +298,7 @@ body {
     }
 }
 
+/* Professional World-Class Slider Animations */
 .slide {
     position: absolute;
     top: 0;
@@ -305,17 +306,55 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    z-index: 1;
+    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    overflow: hidden;
 }
 
 .slide.active {
     opacity: 1;
+    z-index: 2;
 }
 
+/* 1. Professional Fade Effect */
+.slider-container[data-effect="fade"] .slide {
+    transition: opacity 1s ease-in-out;
+}
+
+/* 2. Modern Slide Effect (Slide from Right) */
+.slider-container[data-effect="slide"] .slide {
+    transform: translateX(100%);
+    opacity: 1; /* Keep opacity 1 for sliding */
+}
+
+.slider-container[data-effect="slide"] .slide.active {
+    transform: translateX(0);
+}
+
+.slider-container[data-effect="slide"] .slide.prev {
+    transform: translateX(-100%);
+}
+
+/* 3. Luxury Zoom Effect (Ken Burns) */
+.slider-container[data-effect="zoom"] .slide {
+    opacity: 0;
+    transform: scale(1.2);
+    transition: opacity 1s ease, transform 1.2s ease;
+}
+
+.slider-container[data-effect="zoom"] .slide.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Banner Image Smoothing */
 .slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    backface-visibility: hidden;
+    -webkit-user-drag: none;
 }
 
 .slider-dots {

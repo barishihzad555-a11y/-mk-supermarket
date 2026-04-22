@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - MK Supermarket</title>
+    <link rel="stylesheet" href="admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .login-body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .login-card h2 { margin-bottom: 30px; color: var(--text-dark); }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+
+        /* Camera Styling */
+        .camera-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+            position: relative;
+            background: #eee;
+        }
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        #captured-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            transform: scaleX(-1);
+        }
+        .camera-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .login-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .login-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .status-msg { margin-top: 15px; font-size: 0.85rem; display: none; }
+        .status-msg.error { color: var(--danger); display: block; }
+    </style>
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <div class="login-logo">MK <span>Admin</span></div>
+        <h2>Welcome Back</h2>
+
+        <!-- Login Photo Capture -->
+        <div class="camera-container" id="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none"></canvas>
+            <img id="captured-photo">
+        </div>
+        <button type="button" class="camera-btn" id="take-photo-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+            </svg>
+            Take Login Photo
+        </button>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="admin-name" class="form-input" placeholder="Enter full name" required>
+            </div>
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="admin-mobile" class="form-input" placeholder="03xx xxxxxxx" required>
+            </div>
+            <div class="form-group">
+                <label>Access Password</label>
+                <input type="password" id="admin-password" class="form-input" placeholder="••••••••" required>
+            </div>
+            <div id="login-error" class="status-msg error">Invalid credentials or location denied!</div>
+            <button type="submit" class="login-btn">Secure Login</button>
+        </form>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('captured-photo');
+        const takePhotoBtn = document.getElementById('take-photo-btn');
+        let capturedImageData = null;
+
+        // Initialize Camera
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert("Camera access is required for verification!");
+            }
+        }
+
+        initCamera();
+
+        takePhotoBtn.onclick = () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            capturedImageData = canvas.toDataURL('image/jpeg');
+            photo.src = capturedImageData;
+            photo.style.display = 'block';
+            video.style.display = 'none';
+            takePhotoBtn.innerHTML = '<span>Retake Photo</span>';
+        };
+
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+
+            if (!capturedImageData) {
+                alert("Please take a photo for verification!");
+                return;
+            }
+
+            const name = document.getElementById('admin-name').value;
+            const mobile = document.getElementById('admin-mobile').value;
+            const pass = document.getElementById('admin-password').value;
+            const savedPass = localStorage.getItem('admin_password') || 'admin123';
+
+            if (pass === savedPass) {
+                // Get Location
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const session = {
+                        name,
+                        mobile,
+                        photo: capturedImageData,
+                        location: `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`,
+                        time: new Date().toLocaleTimeString(),
+                        date: new Date().toLocaleDateString(),
+                        id: Date.now()
+                    };
+
+                    // Add to active sessions
+                    let sessions = JSON.parse(localStorage.getItem('active_sessions') || '[]');
+                    sessions.unshift(session); // Add newest first
+                    localStorage.setItem('active_sessions', JSON.stringify(sessions));
+                    localStorage.setItem('current_admin_session', JSON.stringify(session));
+
+                    window.location.href = 'admin.html';
+                }, () => {
+                    alert('Location access is required for security!');
+                });
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>

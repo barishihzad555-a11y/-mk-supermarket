@@ -190,7 +190,7 @@ body.luxury-detail-page {
 .gallery-showcase {
     position: relative;
     background: var(--luxe-off-white);
-    padding-top: 80px;
+    padding-top: 50px; /* Reduced from 80px */
 }
 
 /* Lightbox Effect */
@@ -353,20 +353,29 @@ body.luxury-detail-page {
     margin-top: 2px;
 }
 
+.p-title-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
 .p-title {
     font-family: var(--font-serif);
     font-size: 2.2rem;
     font-weight: 500;
     line-height: 1.1;
     color: var(--luxe-black);
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Removed margin-bottom since it's in a row now */
+    flex: 1;
 }
 
 .p-pricing-v2 {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 0; /* Removed margin-bottom since it's in a row now */
 }
 
 .price-wrap {
@@ -538,8 +547,6 @@ body.luxury-detail-page {
     cursor: pointer;
 }
 
-.btn-wa-modern svg { width: 22px; }
-
 .btn-wishlist {
     height: 64px;
     width: 64px;
@@ -575,9 +582,6 @@ body.luxury-detail-page {
     margin: 0 auto 10px;
     color: var(--luxe-gold);
 }
-
-.t-icon svg { width: 20px; }
-.trust-item span { font-size: 0.65rem; font-weight: 600; color: var(--luxe-gray); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Accordion */
 .luxe-details-accordion {
@@ -766,7 +770,7 @@ details[open] .acc-icon { transform: rotate(-135deg); margin-bottom: -5px; }
         grid-template-columns: 1fr 450px;
         max-width: 1200px;
         margin: 0 auto;
-        padding-top: 100px;
+        padding-top: 60px; /* Reduced from 100px */
         gap: 40px;
     }
 

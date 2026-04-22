@@ -7,12 +7,22 @@
     <link rel="stylesheet" href="admin-style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Route Protection
+        if (!localStorage.getItem('current_admin_session')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <!-- Cropper.js for Professional Image Cutting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 </head>
 <body>
     <!-- Mobile Header -->
     <header class="admin-header">
         <div class="logo">MK <span>Admin</span></div>
         <div class="user-info">
+            <span id="admin-display-name" style="margin-right: 10px; font-weight: 600; font-size: 0.9rem;">Admin</span>
+            <button id="logout-btn" class="btn-secondary sm" style="margin-right: 15px;">Logout</button>
             <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="Admin" class="avatar">
         </div>
     </header>
@@ -33,6 +43,10 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     <span>Orders</span>
                 </li>
+                <li data-target="banners">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    <span>Banners</span>
+                </li>
                 <li data-target="settings">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     <span>Settings</span>
@@ -48,7 +62,7 @@
                     <div class="stat-card">
                         <div class="stat-icon sales"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
                         <div class="stat-info">
-                            <h3>$12,450</h3>
+                            <h3>Rs 12,450</h3>
                             <p>Total Revenue</p>
                         </div>
                     </div>
@@ -68,22 +82,36 @@
                     </div>
                 </div>
 
-                <div class="recent-orders">
-                    <div class="section-header">
-                        <h2>Recent Orders</h2>
-                        <button class="btn-text">View All</button>
-                    </div>
-                    <div class="order-list">
-                        <!-- Order Item -->
-                        <div class="order-item">
-                            <div class="order-id">#ORD-7721</div>
-                            <div class="order-status completed">Completed</div>
-                            <div class="order-total">$45.00</div>
+                <div class="dashboard-lists" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                    <!-- Recent Orders -->
+                    <div class="recent-orders">
+                        <div class="section-header">
+                            <h2>Recent Orders</h2>
+                            <button class="btn-text">View All</button>
                         </div>
-                        <div class="order-item">
-                            <div class="order-id">#ORD-7720</div>
-                            <div class="order-status pending">Pending</div>
-                            <div class="order-total">$128.50</div>
+                        <div class="order-list">
+                            <div class="order-item">
+                                <div class="order-id">#ORD-7721</div>
+                                <div class="order-status completed">Completed</div>
+                                <div class="order-total">Rs 4,500</div>
+                            </div>
+                            <div class="order-item">
+                                <div class="order-id">#ORD-7720</div>
+                                <div class="order-status pending">Pending</div>
+                                <div class="order-total">Rs 1,280</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Staff Monitoring -->
+                    <div class="recent-orders">
+                        <div class="section-header">
+                            <h2>Active Staff & Login History</h2>
+                            <button class="btn-text" id="clear-sessions">Clear History</button>
+                        </div>
+                        <div class="order-list" id="session-list">
+                            <!-- Sessions will be loaded here -->
+                            <div style="padding: 20px; text-align: center; color: var(--text-gray);">Tracking live sessions...</div>
                         </div>
                     </div>
                 </div>
@@ -101,16 +129,130 @@
                 </div>
 
                 <div class="product-grid-admin">
-                    <!-- Example Product -->
-                    <div class="product-item-admin">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop" alt="Shoe">
-                        <div class="product-details">
-                            <h4>Red Nike Sneakers</h4>
-                            <p>$89.00 • 45 in stock</p>
+                    <!-- Products will be loaded here dynamically -->
+                    <div style="text-align: center; padding: 20px; color: #64748b; grid-column: 1/-1;">
+                        Loading products...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banners Section -->
+            <div id="banners" class="content-section">
+                <div class="section-header">
+                    <h1 class="page-title">Banner System <span style="font-size: 0.9rem; font-weight: 400; color: var(--text-gray);">(Global Standard)</span></h1>
+                    <button class="btn-primary" id="open-banner-modal">+ Add New Banner</button>
+                </div>
+
+                <!-- Live Banners Professional Grid -->
+                <div class="banner-management-grid">
+                    <div class="live-banners-list">
+                        <div class="card-header">
+                            <h3>Live Banners <span id="banner-count" class="count-badge">0</span></h3>
+                            <p class="helper-text">Drag to reorder active banners</p>
                         </div>
-                        <div class="product-actions">
-                            <button class="btn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                            <button class="btn-icon delete"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                        <div id="active-banners-container" class="banners-scroll-grid">
+                            <!-- Banner Items will be loaded here -->
+                            <div class="empty-banners">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                <p>No banners uploaded yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="banner-settings-sidebar">
+                        <div class="control-card">
+                            <h3>Slide Settings</h3>
+                            <div class="settings-group">
+                                <label>Transition Effect</label>
+                                <select id="slide-effect" class="form-input">
+                                    <option value="fade">Smooth Fade (Professional)</option>
+                                    <option value="slide">Horizontal Slide</option>
+                                    <option value="zoom">Zoom In/Out</option>
+                                </select>
+                            </div>
+                            <div class="settings-group">
+                                <label>Auto-Play Speed (Seconds)</label>
+                                <input type="number" id="slide-speed" value="5" min="1" max="15" class="form-input">
+                            </div>
+                            <div class="settings-group">
+                                <label>Navigation Dots</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="show-dots" checked>
+                                    <span class="slider"></span>
+                                </div>
+                            </div>
+                            <button class="btn-primary w-100" id="save-banner-settings">Save Global Settings</button>
+                        </div>
+
+                        <div class="preview-mockup-card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h3>Website Preview</h3>
+                                <span class="badge">Desktop View</span>
+                            </div>
+                            <div class="website-banner-mockup">
+                                <div class="mockup-header">
+                                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                                    <div class="mockup-url">mksupermarket.com</div>
+                                </div>
+                                <div class="banner-live-container" id="admin-banner-preview">
+                                    <!-- Dynamic Preview Slider -->
+                                    <div id="preview-slider" class="preview-slider">
+                                        <div class="preview-slide active">
+                                            <img src="https://placehold.co/1200x450?text=Banner+Preview" alt="Preview">
+                                        </div>
+                                    </div>
+                                    <div class="banner-overlay-mock" id="preview-dots">
+                                        <span class="dot active"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banner Upload & Crop Modal -->
+            <div id="banner-modal" class="modal">
+                <div class="modal-content banner-modal-content">
+                    <div class="modal-header">
+                        <h2>Banner Editor</h2>
+                        <span class="close-modal" id="close-banner-modal">&times;</span>
+                    </div>
+
+                    <div class="banner-editor-container">
+                        <!-- Step 1: Upload -->
+                        <div id="banner-step-upload" class="editor-step">
+                            <div class="banner-upload-area" id="banner-drop-zone">
+                                <input type="file" id="banner-upload-input" accept="image/*" hidden>
+                                <div class="upload-placeholder">
+                                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <h3>Upload Banner Image</h3>
+                                    <p>Recommended size: 1200x450 for best quality</p>
+                                    <button type="button" class="btn-primary" onclick="document.getElementById('banner-upload-input').click()">Browse Files</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Crop & Adjust -->
+                        <div id="banner-step-crop" class="editor-step" style="display: none;">
+                            <div class="cropper-wrapper">
+                                <img id="cropper-image" src="" alt="To Crop">
+                            </div>
+                            <div class="editor-controls">
+                                <div class="adjustment-info">
+                                    <span>Manual Adjusting: 8:3 Professional Ratio</span>
+                                </div>
+                                <div class="crop-actions">
+                                    <button class="btn-icon" id="crop-rotate-left" title="Rotate Left">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.57 12a9 9 0 0 1 14.82-6.75L21 9m0 0H15.5m5.5 0V3.5"/></svg>
+                                    </button>
+                                    <button class="btn-icon" id="crop-rotate-right" title="Rotate Right">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.43 12a9 9 0 0 0-14.82-6.75L3 9m0 0h5.5M3 9V3.5"/></svg>
+                                    </button>
+                                    <button class="btn-secondary" id="back-to-upload">Back</button>
+                                    <button class="btn-primary" id="save-cropped-banner">Apply & Save</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,10 +284,10 @@
                             <label>Category</label>
                             <select id="product-category">
                                 <option value="popular">Popular Products</option>
-                                <option value="Flash Sale">Flash Sale</option>
-                                <option value="Groceries">Groceries</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Beauty">Beauty</option>
+                                <option value="flash">Flash Sale</option>
+                                <option value="grocery">Groceries</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="beauty">Beauty</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -159,9 +301,253 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Professional Global Settings Section -->
+            <div id="settings" class="content-section">
+                <div class="section-header">
+                    <h1 class="page-title">Command Center <span style="font-size: 0.9rem; font-weight: 400; color: var(--text-gray);">(Site & Admin Control)</span></h1>
+                    <button type="submit" form="global-settings-form" class="btn-primary" id="save-all-settings">Save All Changes</button>
+                </div>
+
+                <div class="settings-grid-container">
+                    <!-- Settings Navigation -->
+                    <aside class="settings-sidebar">
+                        <nav class="settings-nav-tabs">
+                            <button class="tab-btn active" data-tab="general">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                <span>General</span>
+                            </button>
+                            <button class="tab-btn" data-tab="branding">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                <span>Branding</span>
+                            </button>
+                            <button class="tab-btn" data-tab="commerce">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                <span>Commerce</span>
+                            </button>
+                            <button class="tab-btn" data-tab="social">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                                <span>Social Links</span>
+                            </button>
+                            <button class="tab-btn" data-tab="advanced">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                                <span>Advanced</span>
+                            </button>
+                        </nav>
+                    </aside>
+
+                    <!-- Settings Main Content -->
+                    <div class="settings-content-area">
+                        <form id="global-settings-form">
+                            <!-- Tab: General -->
+                            <div id="tab-general" class="tab-content active">
+                                <div class="settings-card">
+                                    <h3 class="card-title">Site Identity</h3>
+                                    <div class="form-group">
+                                        <label>Store Name</label>
+                                        <input type="text" id="site-name" class="form-input" placeholder="MK Supermarket">
+                                        <p class="input-desc">The official name of your store appearing on the title and emails.</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Global Tagline</label>
+                                        <input type="text" id="site-tagline" class="form-input" placeholder="Quality & Freshness Delivered">
+                                    </div>
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Contact Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>WhatsApp (Orders)</label>
+                                            <input type="text" id="store-whatsapp" class="form-input" placeholder="+92 300 1234567">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Support Email</label>
+                                            <input type="email" id="store-email" class="form-input" placeholder="support@mksupermarket.com">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Store Physical Address</label>
+                                        <textarea id="store-address" class="form-input" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Branding -->
+                            <div id="tab-branding" class="tab-content">
+                                <div class="settings-card">
+                                    <h3 class="card-title">Visual Identity</h3>
+                                    <div class="form-group">
+                                        <label>Primary Theme Color</label>
+                                        <div class="color-control">
+                                            <input type="color" id="primary-color" value="#2563eb">
+                                            <code id="color-hex">#2563EB</code>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Main Logo (Header)</label>
+                                            <div class="logo-upload-box">
+                                                <img id="logo-preview" src="https://placehold.co/200x60?text=Logo+Preview" class="logo-preview-img">
+                                                <input type="file" id="logo-upload" accept="image/*" hidden>
+                                                <button type="button" class="btn-secondary sm" onclick="document.getElementById('logo-upload').click()">Upload New</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Favicon (Browser Icon)</label>
+                                            <div class="logo-upload-box">
+                                                <img id="favicon-preview" src="https://placehold.co/32x32?text=F" class="fav-preview-img">
+                                                <input type="file" id="fav-upload" accept="image/*" hidden>
+                                                <button type="button" class="btn-secondary sm" onclick="document.getElementById('fav-upload').click()">Upload</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Typography & UI</h3>
+                                    <div class="form-group">
+                                        <label>Global Font Family</label>
+                                        <select id="site-font" class="form-input">
+                                            <option value="'Plus Jakarta Sans', sans-serif">Jakarta Sans (Modern)</option>
+                                            <option value="'Inter', sans-serif">Inter (Clean)</option>
+                                            <option value="'Poppins', sans-serif">Poppins (Playful)</option>
+                                            <option value="'Roboto', sans-serif">Roboto (Standard)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Button Border Radius</label>
+                                        <input type="range" id="btn-radius" min="0" max="30" value="8" class="form-range">
+                                        <div class="range-labels"><span>Sharp (0px)</span><span id="radius-val">8px</span><span>Rounded (30px)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Commerce -->
+                            <div id="tab-commerce" class="tab-content">
+                                <div class="settings-card">
+                                    <h3 class="card-title">Currency & Region</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Currency Symbol</label>
+                                            <input type="text" id="site-currency" class="form-input" placeholder="Rs">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Currency Code</label>
+                                            <input type="text" id="site-currency-code" class="form-input" placeholder="PKR">
+                                        </div>
+                                    </div>
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Order Rules</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Minimum Order Amount</label>
+                                            <input type="number" id="min-order" class="form-input" placeholder="500">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Fixed Delivery Charge</label>
+                                            <input type="number" id="delivery-charge" class="form-input" placeholder="100">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Free Delivery Above</label>
+                                        <input type="number" id="free-delivery-min" class="form-input" placeholder="2000">
+                                        <p class="input-desc">Set to 0 to disable free delivery.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Social -->
+                            <div id="tab-social" class="tab-content">
+                                <div class="settings-card">
+                                    <h3 class="card-title">Social Media Connections</h3>
+                                    <div class="form-group">
+                                        <label>Facebook Page URL</label>
+                                        <div class="input-with-icon">
+                                            <span class="icon-pre">fb.com/</span>
+                                            <input type="text" id="social-fb" class="form-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Instagram Handle</label>
+                                        <div class="input-with-icon">
+                                            <span class="icon-pre">@</span>
+                                            <input type="text" id="social-ig" class="form-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>YouTube Channel</label>
+                                        <input type="text" id="social-yt" class="form-input" placeholder="https://youtube.com/c/yourchannel">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tiktok URL</label>
+                                        <input type="text" id="social-tiktok" class="form-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Advanced -->
+                            <div id="tab-advanced" class="tab-content">
+                                <div class="settings-card">
+                                    <h3 class="card-title">Maintenance & Security</h3>
+                                    <div class="toggle-group-item">
+                                        <div class="toggle-info">
+                                            <h4>Maintenance Mode</h4>
+                                            <p>Enable to show a "Coming Soon" page to visitors.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="maintenance-mode">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-group-item">
+                                        <div class="toggle-info">
+                                            <h4>Show Stock Count</h4>
+                                            <p>Show exact stock quantity on product pages.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="show-stock-count" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Admin Account</h3>
+                                    <div class="form-group">
+                                        <label>Update Admin Password</label>
+                                        <input type="password" id="admin-pass" class="form-input" placeholder="Enter new password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Confirm New Password</label>
+                                        <input type="password" id="admin-pass-confirm" class="form-input" placeholder="Confirm new password">
+                                    </div>
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Database & Backups</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <button type="button" class="btn-secondary w-100" id="backup-data">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                                Download Backup
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="file" id="restore-upload" accept=".json" hidden>
+                                            <button type="button" class="btn-secondary w-100" onclick="document.getElementById('restore-upload').click()">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                                Restore Backup
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="input-desc" style="margin-top: 10px;">Keep a backup before making major changes or editing the code.</p>
+
+                                    <div class="settings-divider"></div>
+                                    <h3 class="card-title">Danger Zone</h3>
+                                    <button type="button" class="btn-secondary w-100" id="reset-site" style="color: var(--danger); border-color: var(--danger);">Reset All Data to Factory Default</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>
