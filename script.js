@@ -143,25 +143,23 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Fixed path logic based on your server screenshots
-    let imagePath = p.image;
+    // Final Correct Path Logic
+    let imagePath = p.image || '';
 
-    if (imagePath && !imagePath.startsWith('http')) {
-        // Remove leading slashes, "uploads/" or "products/" if they exist to start fresh
-        imagePath = imagePath.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
-        // Based on your Hostinger screenshot, images are directly in the uploads folder
-        imagePath = 'uploads/' + imagePath;
-    } else if (!imagePath) {
-        imagePath = 'https://placehold.co/400x400?text=No+Image';
-    }
+    // Clean up the path: remove any existing prefixes to avoid doubling
+    let cleanName = imagePath.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
+
+    // Construct absolute local path
+    let finalSrc = cleanName ? 'uploads/' + cleanName : 'https://placehold.co/400x400?text=No+Image';
 
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
-            <div class="product-image">
-                <img src="${imagePath}"
+            <div class="product-image" style="background: #f5f5f5; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+                <img src="${finalSrc}"
                      alt="${p.name}"
                      loading="eager"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Check+Uploads+Folder';">
+                     style="opacity: 1 !important; visibility: visible !important; object-fit: cover; width: 100%; height: 100%;"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
