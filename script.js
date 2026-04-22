@@ -143,21 +143,29 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Final Correct Path Logic
-    let imagePath = p.image || '';
+    // Direct and simple path logic
+    let finalSrc = p.image;
 
-    // Clean up the path: remove any existing prefixes to avoid doubling
-    let cleanName = imagePath.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
+    // If it's just a filename, add uploads/
+    if (finalSrc && !finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
+        finalSrc = 'uploads/' + finalSrc;
+    }
 
-    // Construct absolute local path
-    let finalSrc = cleanName ? 'uploads/' + cleanName : 'https://placehold.co/400x400?text=No+Image';
+    // Fallback for empty images
+    if (!finalSrc) {
+        finalSrc = 'https://placehold.co/400x400?text=No+Image';
+    }
+
+    // DEBUG: Log the path to see what's happening
+    console.log(`Product: ${p.name}, Image Path: ${finalSrc}`);
 
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     onerror="handleImageError(this)">
+                     onload="console.log('Success loading: ' + this.src)"
+                     onerror="console.error('FAILED to load: ' + this.src); this.src='https://placehold.co/400x400?text=Check+Path';">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
