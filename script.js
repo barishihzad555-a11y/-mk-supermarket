@@ -156,7 +156,7 @@ function createProductCard(p) {
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
             <div class="product-image">
-                <img src="${imagePath}" alt="${p.name}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://placehold.co/400x400?text=Image+Not+Found'">
+                <img src="${imagePath}" alt="${p.name}" loading="eager" onerror="this.src='https://placehold.co/400x400?text=Image+Not+Found'">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">

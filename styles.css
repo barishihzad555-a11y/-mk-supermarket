@@ -2216,23 +2216,36 @@ section {
     }
 }
 
-/* Guaranteed Visibility for Images - Fixed for Homepage */
-.product-image img {
+/* Guaranteed Visibility for Images - Professional Fix */
+.product-image img,
+.product-card img,
+.flash-products img {
     opacity: 1 !important;
     visibility: visible !important;
-    transition: transform 0.6s ease, opacity 0.3s ease;
     display: block !important;
-    min-height: 100px;
+    max-height: 100%;
     width: 100%;
     object-fit: cover;
+    transition: opacity 0.4s ease-in-out;
 }
 
-/* Remove any hiding during loading */
-.product-image img[loading],
-.product-image img:not(.loaded) {
+/* Ensure no animation leaves it at opacity 0 */
+.product-card {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: fadeIn 0.5s ease-out forwards !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fix for possible filter issue */
+.product-image {
+    background: #fdfdfd;
+    overflow: hidden;
+    position: relative;
     opacity: 1 !important;
 }
 
-.product-card .product-image {
-    background: #f8f9fa; /* Placeholder color while loading */
-}
