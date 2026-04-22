@@ -24,6 +24,12 @@ async function initBanners() {
     if (!container) return;
 
     try {
+        // Load settings first
+        const settingsResponse = await fetch('upload.php?type=settings');
+        const settings = await settingsResponse.json();
+        if (settings.slide_speed) bannerSettings.speed = settings.slide_speed;
+        if (settings.slide_effect) bannerSettings.effect = settings.slide_effect;
+
         const response = await fetch('upload.php?type=banner');
         const banners = await response.json();
 

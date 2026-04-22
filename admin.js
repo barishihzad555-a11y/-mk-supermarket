@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('type', 'product');
             if (currentEditId) {
                 formData.append('id', currentEditId);
-                formData.append('action', 'update');
+                // In my upload.php logic, if ID is provided, it updates existing
             }
             formData.append('name', document.getElementById('p-name').value);
             formData.append('price', document.getElementById('p-price').value);
@@ -85,13 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
                 if (result.status === 'success') {
                     addProductModal.style.display = 'none';
-                    loadProducts();
+                    await loadProducts();
+                    alert('Product saved successfully!');
                 } else {
                     alert('Error: ' + result.message);
                 }
             } catch (error) {
                 console.error('Upload failed:', error);
-                alert('Failed to save product.');
+                alert('Failed to save product to server.');
             } finally {
                 saveBtn.innerText = originalText;
                 saveBtn.disabled = false;
@@ -144,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePreview.src = p.image;
             previewContainer.style.display = 'block';
             imageInput.required = false;
+            if (modalTitle) modalTitle.innerText = 'Edit Product';
             addProductModal.style.display = 'flex';
         } catch (error) {
             console.error('Error fetching product:', error);
@@ -151,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deleteProduct = async (id) => {
-        if (!confirm('Are you sure?')) return;
+        if (!confirm('Are you sure you want to delete this product?')) return;
         const formData = new FormData();
         formData.append('action', 'delete');
         formData.append('type', 'product');
@@ -160,16 +162,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('upload.php', { method: 'POST', body: formData });
             const result = await response.json();
-            if (result.status === 'success') loadProducts();
+            if (result.status === 'success') {
+                await loadProducts();
+            } else {
+                alert('Delete failed: ' + result.message);
+            }
         } catch (error) {
             console.error('Delete failed:', error);
         }
     };
 
-    // --- World-Class Banner System Logic ---
+    // --- Banner System ---
     let cropper = null;
     let banners = [];
-    let bannerSettings = JSON.parse(localStorage.getItem('banner_settings') || '{"effect":"fade","speed":5,"showDots":true}');
 
     const bannerModal = document.getElementById('banner-modal');
     const openBannerBtn = document.getElementById('open-banner-modal');
@@ -196,15 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderBanners() {
         if (!activeBannersContainer) return;
-        document.getElementById('banner-count').innerText = banners.length;
+        const countEl = document.getElementById('banner-count');
+        if (countEl) countEl.innerText = banners.length;
 
-        if (banners.length === 0) {
-            activeBannersContainer.innerHTML = `<div class="empty-banners"><p>No banners uploaded yet</p></div>`;
-            updatePreviewSlider();
-            return;
-        }
+        activeBannersContainer.innerHTML = banners.length ? '' : `<div class="empty-banners"><p>No banners uploaded yet</p></div>`;
 
-        activeBannersContainer.innerHTML = '';
         banners.forEach((banner, index) => {
             const card = document.createElement('div');
             card.className = 'banner-item-card';
@@ -219,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             activeBannersContainer.appendChild(card);
         });
-        updatePreviewSlider();
     }
 
     window.deleteBanner = async (id) => {
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('upload.php', { method: 'POST', body: formData });
             const result = await response.json();
-            if (result.status === 'success') loadBanners();
+            if (result.status === 'success') await loadBanners();
         } catch (error) {
             console.error('Delete banner failed:', error);
         }
@@ -255,29 +255,106 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    saveCroppedBtn.onclick = async () => {
-        const canvas = cropper.getCroppedCanvas({ width: 1200, height: 450 });
-        const croppedData = canvas.toDataURL('image/webp', 0.8);
+    if (saveCroppedBtn) {
+        saveCroppedBtn.onclick = async () => {
+            saveCroppedBtn.innerText = 'Saving...';
+            const canvas = cropper.getCroppedCanvas({ width: 1200, height: 450 });
+            const croppedData = canvas.toDataURL('image/webp', 0.8);
 
-        const formData = new FormData();
-        formData.append('type', 'banner');
-        formData.append('image_base64', croppedData);
+            const formData = new FormData();
+            formData.append('type', 'banner');
+            formData.append('image_base64', croppedData);
 
+            try {
+                const response = await fetch('upload.php', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    bannerModal.style.display = 'none';
+                    cropper.destroy();
+                    await loadBanners();
+                }
+            } catch (error) {
+                console.error('Banner upload failed:', error);
+            } finally {
+                saveCroppedBtn.innerText = 'Apply & Save';
+            }
+        };
+    }
+
+    if (openBannerBtn) {
+        openBannerBtn.onclick = () => {
+            stepUpload.style.display = 'block';
+            stepCrop.style.display = 'none';
+            bannerModal.style.display = 'flex';
+        };
+    }
+    if (closeBannerBtn) closeBannerBtn.onclick = () => bannerModal.style.display = 'none';
+
+    // --- Settings Management ---
+    const settingsForm = document.getElementById('global-settings-form');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.onclick = () => {
+            const tab = btn.getAttribute('data-tab');
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        };
+    });
+
+    async function loadSettings() {
         try {
-            const response = await fetch('upload.php', { method: 'POST', body: formData });
-            const result = await response.json();
-            if (result.status === 'success') {
-                bannerModal.style.display = 'none';
-                cropper.destroy();
-                loadBanners();
+            const response = await fetch('upload.php?type=settings');
+            const settings = await response.json();
+            if (Object.keys(settings).length === 0) return;
+
+            for (const key in settings) {
+                const el = document.getElementById(key);
+                if (el) {
+                    if (el.type === 'checkbox') el.checked = settings[key];
+                    else el.value = settings[key];
+                }
             }
         } catch (error) {
-            console.error('Banner upload failed:', error);
+            console.error('Error loading settings:', error);
         }
-    };
+    }
 
+    if (settingsForm) {
+        settingsForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById('save-all-settings');
+            saveBtn.innerText = 'Saving...';
+
+            const settings = {};
+            const inputs = settingsForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.id) {
+                    settings[input.id] = input.type === 'checkbox' ? input.checked : input.value;
+                }
+            });
+
+            try {
+                const response = await fetch('upload.php', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    alert('All settings saved successfully!');
+                }
+            } catch (error) {
+                console.error('Failed to save settings:', error);
+            } finally {
+                saveBtn.innerText = 'Save All Changes';
+            }
+        };
+    }
+
+    loadSettings();
     loadBanners();
-
-    // Remaining logic for settings and sessions (kept similar but ensured server sync)
-    // ...
 });
