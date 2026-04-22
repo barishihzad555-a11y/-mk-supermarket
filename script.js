@@ -143,16 +143,14 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Smart path logic to prevent double "uploads/" or missing prefix
+    // Smart path logic to handle domain changes and missing folders
     let imagePath = p.image;
-    if (imagePath && !imagePath.startsWith('http')) {
-        // Remove leading slashes or ./ if they exist
-        imagePath = imagePath.replace(/^(\.\/|\/)/, '');
 
-        // Add uploads/ only if not already present
-        if (!imagePath.startsWith('uploads/')) {
-            imagePath = 'uploads/' + imagePath;
-        }
+    if (imagePath && !imagePath.startsWith('http')) {
+        // Remove any leading slashes or redundant paths
+        imagePath = imagePath.replace(/^(\.\/|\/|uploads\/)+/, '');
+        // Always point to the local uploads folder
+        imagePath = 'uploads/' + imagePath;
     } else if (!imagePath) {
         imagePath = 'https://placehold.co/400x400?text=No+Image';
     }
@@ -160,7 +158,10 @@ function createProductCard(p) {
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
             <div class="product-image">
-                <img src="${imagePath}" alt="${p.name}" loading="eager" onerror="handleImgError(this)">
+                <img src="${imagePath}"
+                     alt="${p.name}"
+                     loading="eager"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
