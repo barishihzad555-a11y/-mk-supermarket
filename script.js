@@ -157,8 +157,6 @@ function createProductCard(p) {
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     loading="lazy"
-                     onload="this.classList.add('loaded')"
                      onerror="handleImageError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
