@@ -143,17 +143,8 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Direct and simple path logic matching product-detail.html
+    // RESTORED TO ORIGINAL WORKING LINK LOGIC
     let finalSrc = p.image;
-
-    // Check if IMAGE_BASE_URL is defined (from product-detail logic)
-    const baseUrl = typeof IMAGE_BASE_URL !== 'undefined' ? IMAGE_BASE_URL : 'uploads/';
-
-    if (finalSrc && !finalSrc.startsWith('http')) {
-        // If the image already has 'uploads/' or './', clean it then add baseUrl
-        let cleanName = finalSrc.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
-        finalSrc = baseUrl + cleanName;
-    }
 
     if (!finalSrc) {
         finalSrc = 'https://placehold.co/400x400?text=No+Image';
@@ -164,7 +155,7 @@ function createProductCard(p) {
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
+                     onerror="handleImageError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
