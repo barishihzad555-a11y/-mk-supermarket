@@ -66,7 +66,7 @@ try {
         $image_path = ($itemIndex !== -1) ? $data[$itemIndex]['image'] : '';
 
         // Function to compress and resize image
-        function processImage($source, $dest, $quality, $targetWidth = 800) {
+        function processImage($source, $dest, $quality, $targetWidth = 600) {
             $info = getimagesize($source);
             if ($info === false) return false;
 
@@ -77,24 +77,32 @@ try {
 
             if (!$img) return false;
 
-            // Resize if wider than target
+            // Resize and maintain aspect ratio
             $width = $info[0];
             $height = $info[1];
+
+            $newWidth = $width;
+            $newHeight = $height;
+
             if ($width > $targetWidth) {
                 $newWidth = $targetWidth;
                 $newHeight = ($height / $width) * $newWidth;
-                $tmp = imagecreatetruecolor($newWidth, $newHeight);
-
-                // Maintain transparency for PNG/WebP
-                imagealphablending($tmp, false);
-                imagesavealpha($tmp, true);
-
-                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                $img = $tmp;
             }
 
-            // Save as WebP for best compression
-            $result = imagewebp($img, $dest, $quality);
+            $tmp = imagecreatetruecolor($newWidth, $newHeight);
+
+            // Maintain transparency for PNG/WebP
+            imagealphablending($tmp, false);
+            imagesavealpha($tmp, true);
+            $transparent = imagecolorallocatealpha($tmp, 0, 0, 0, 127);
+            imagefill($tmp, 0, 0, $transparent);
+
+            imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+            // Save as WebP for best compression and quality
+            $result = imagewebp($tmp, $dest, $quality);
+
+            imagedestroy($tmp);
             imagedestroy($img);
             return $result;
         }
