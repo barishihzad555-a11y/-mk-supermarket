@@ -143,29 +143,28 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Direct and simple path logic
+    // Direct and simple path logic matching product-detail.html
     let finalSrc = p.image;
 
-    // If it's just a filename, add uploads/
-    if (finalSrc && !finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
-        finalSrc = 'uploads/' + finalSrc;
+    // Check if IMAGE_BASE_URL is defined (from product-detail logic)
+    const baseUrl = typeof IMAGE_BASE_URL !== 'undefined' ? IMAGE_BASE_URL : 'uploads/';
+
+    if (finalSrc && !finalSrc.startsWith('http')) {
+        // If the image already has 'uploads/' or './', clean it then add baseUrl
+        let cleanName = finalSrc.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
+        finalSrc = baseUrl + cleanName;
     }
 
-    // Fallback for empty images
     if (!finalSrc) {
         finalSrc = 'https://placehold.co/400x400?text=No+Image';
     }
-
-    // DEBUG: Log the path to see what's happening
-    console.log(`Product: ${p.name}, Image Path: ${finalSrc}`);
 
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     onload="console.log('Success loading: ' + this.src)"
-                     onerror="console.error('FAILED to load: ' + this.src); this.src='https://placehold.co/400x400?text=Check+Path';">
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
