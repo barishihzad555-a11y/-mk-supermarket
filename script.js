@@ -18,36 +18,41 @@ function initApp() {
 }
 
 // --- Banner Slider System ---
-function initBanners() {
+async function initBanners() {
     const container = document.getElementById('main-banner-container');
     const dotsContainer = document.querySelector('.slider-dots');
     if (!container) return;
 
-    const banners = JSON.parse(localStorage.getItem('site_banners') || '[]');
+    try {
+        const response = await fetch('upload.php?type=banner');
+        const banners = await response.json();
 
-    // Default banner if none exists
-    const defaultBanners = [{image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80'}];
-    const activeBanners = banners.length > 0 ? banners : defaultBanners;
+        // Default banner if none exists
+        const defaultBanners = [{image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80'}];
+        const activeBanners = banners.length > 0 ? banners : defaultBanners;
 
-    container.innerHTML = '';
-    if (dotsContainer) dotsContainer.innerHTML = '';
+        container.innerHTML = '';
+        if (dotsContainer) dotsContainer.innerHTML = '';
 
-    activeBanners.forEach((banner, i) => {
-        const slide = document.createElement('div');
-        slide.className = `slide ${i === 0 ? 'active' : ''}`;
-        slide.innerHTML = `<img src="${banner.image}" alt="Banner ${i+1}">`;
-        container.appendChild(slide);
+        activeBanners.forEach((banner, i) => {
+            const slide = document.createElement('div');
+            slide.className = `slide ${i === 0 ? 'active' : ''}`;
+            slide.innerHTML = `<img src="${banner.image}" alt="Banner ${i+1}">`;
+            container.appendChild(slide);
 
-        if (dotsContainer && activeBanners.length > 1) {
-            const dot = document.createElement('span');
-            dot.className = `dot ${i === 0 ? 'active' : ''}`;
-            dot.onclick = () => goToSlide(i);
-            dotsContainer.appendChild(dot);
+            if (dotsContainer && activeBanners.length > 1) {
+                const dot = document.createElement('span');
+                dot.className = `dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+        });
+
+        if (activeBanners.length > 1) {
+            startAutoSlide(activeBanners.length);
         }
-    });
-
-    if (activeBanners.length > 1) {
-        startAutoSlide(activeBanners.length);
+    } catch (error) {
+        console.error('Error fetching banners:', error);
     }
 }
 
@@ -101,7 +106,7 @@ function initFlashSaleTimer() {
 // --- Product Rendering ---
 async function loadProducts() {
     try {
-        const response = await fetch('upload.php');
+        const response = await fetch('upload.php?type=product');
         const localData = await response.json();
 
         if (JSON.stringify(localData) === JSON.stringify(productsData)) return;
@@ -110,12 +115,6 @@ async function loadProducts() {
         renderProducts();
     } catch (error) {
         console.error('Error loading products:', error);
-        // Fallback to local storage if server fails
-        const rawData = localStorage.getItem('temp_products');
-        if (rawData) {
-            productsData = JSON.parse(rawData);
-            renderProducts();
-        }
     }
 }
 
@@ -165,10 +164,10 @@ function createProductCard(p) {
 
 // --- Cart Logic ---
 window.addToCart = function(id) {
-    const product = productsData.find(p => p.id === id);
+    const product = productsData.find(p => p.id == id);
     if (!product) return;
 
-    const existing = cart.find(item => item.id === id);
+    const existing = cart.find(item => item.id == id);
     if (existing) {
         existing.qty += 1;
     } else {
@@ -260,7 +259,7 @@ function renderCartItems() {
 }
 
 window.updateQty = function(id, delta) {
-    const item = cart.find(i => i.id === id);
+    const item = cart.find(i => i.id == id);
     if (item) {
         item.qty += delta;
         if (item.qty <= 0) removeItem(id);
@@ -273,7 +272,7 @@ window.updateQty = function(id, delta) {
 };
 
 window.removeItem = function(id) {
-    cart = cart.filter(i => i.id !== id);
+    cart = cart.filter(i => i.id != id);
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCartItems();
     updateCartBadge();
