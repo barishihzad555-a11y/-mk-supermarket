@@ -143,13 +143,13 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // Smart path logic to handle domain changes and missing folders
+    // Fixed path logic based on your server screenshots
     let imagePath = p.image;
 
     if (imagePath && !imagePath.startsWith('http')) {
-        // Remove any leading slashes or redundant paths
-        imagePath = imagePath.replace(/^(\.\/|\/|uploads\/)+/, '');
-        // Always point to the local uploads folder
+        // Remove leading slashes, "uploads/" or "products/" if they exist to start fresh
+        imagePath = imagePath.replace(/^(\.\/|\/|uploads\/|products\/)+/, '');
+        // Based on your Hostinger screenshot, images are directly in the uploads folder
         imagePath = 'uploads/' + imagePath;
     } else if (!imagePath) {
         imagePath = 'https://placehold.co/400x400?text=No+Image';
@@ -161,7 +161,7 @@ function createProductCard(p) {
                 <img src="${imagePath}"
                      alt="${p.name}"
                      loading="eager"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Check+Uploads+Folder';">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
