@@ -154,12 +154,12 @@ function createProductCard(p) {
 
     return `
         <div class="product-card" onclick="location.href='product-detail.html?id=${p.id}'">
-            <div class="product-image" style="background: #f5f5f5; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+            <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     loading="eager"
-                     style="opacity: 1 !important; visibility: visible !important; object-fit: cover; width: 100%; height: 100%;"
-                     onerror="this.onerror=null; this.src='https://placehold.co/400x400?text=Image+Not+Found';">
+                     loading="lazy"
+                     onload="this.classList.add('loaded')"
+                     onerror="handleImageError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
@@ -184,12 +184,14 @@ function createProductCard(p) {
 // Handle image errors gracefully
 function handleImageError(img) {
     console.log("Image load failed:", img.src);
-    // Try without uploads/ if it was added
+    // Prevent infinite loop and add loaded class to show the placeholder
+    img.classList.add('loaded');
+
     if (img.src.includes('uploads/uploads/')) {
         img.src = img.src.replace('uploads/uploads/', 'uploads/');
         return;
     }
-    img.onerror = null; // Prevent infinite loop
+    img.onerror = null;
     img.src = 'https://placehold.co/400x400?text=Photo+Coming+Soon';
 }
 

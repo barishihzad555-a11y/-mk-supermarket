@@ -694,12 +694,17 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
-    opacity: 1 !important; /* Ensure visibility */
-    visibility: visible !important; /* Ensure visibility */
+    transition: transform 0.6s ease, opacity 0.4s ease-in-out;
+    opacity: 0; /* Start hidden for smooth fade-in */
 }
 
-.product-card:hover .product-image img {
+/* Show image when loaded or if it doesn't have loading attribute */
+.product-image img.loaded,
+.product-image img:not([loading]) {
+    opacity: 1;
+}
+
+.product-card:hover .product-image img.loaded {
     transform: scale(1.08);
 }
 
