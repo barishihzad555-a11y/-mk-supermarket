@@ -145,12 +145,11 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // تصویر کا راستہ درست کریں (ہوسٹنگر کے اپلوڈ فولڈر کے مطابق)
-    let finalSrc = p.image;
+    // امیج پاتھ کو بہتر طریقے سے ہینڈل کریں
+    let finalSrc = p.image || 'assets/placeholder.webp';
 
-    if (!finalSrc) {
-        finalSrc = 'assets/placeholder.webp';
-    } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
+    // اگر پاتھ میں پہلے سے 'uploads/' نہیں ہے اور یہ مکمل URL نہیں ہے
+    if (finalSrc !== 'assets/placeholder.webp' && !finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
         finalSrc = 'uploads/' + finalSrc;
     }
 
@@ -159,9 +158,15 @@ function createProductCard(p) {
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
-                     loading="lazy"
+                     loading="eager"
+                     class="product-img-element"
                      onerror="handleImgError(this)">
                 <span class="discount-badge">SAVE 25%</span>
+                <button class="wishlist-btn" onclick="event.stopPropagation();">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <h3>${p.name}</h3>
@@ -195,20 +200,39 @@ function handleImageError(img) {
     img.src = 'assets/placeholder.webp';
 }
 
-// Global Image Error Handler to catch path issues
+// Global Image Error Handler - Fixed and Optimized
 window.handleImgError = function(img) {
-    console.log("Fixing image path for:", img.src);
+    console.warn("Image load failed, attempting fix:", img.src);
     const currentSrc = img.getAttribute('src');
 
-    // If it failed with uploads/ prefix, try without it or vice versa
+    // 1. Check for double uploads prefix
     if (currentSrc.includes('uploads/uploads/')) {
         img.src = currentSrc.replace('uploads/uploads/', 'uploads/');
-    } else if (!currentSrc.startsWith('uploads/') && !currentSrc.startsWith('http')) {
-        img.src = 'uploads/' + currentSrc;
-    } else {
-        img.onerror = null;
-        img.src = 'assets/placeholder.webp';
+        return;
     }
+
+    // 2. Try without uploads/ prefix if it was there
+    if (currentSrc.startsWith('uploads/')) {
+        const fallback = currentSrc.replace('uploads/', '');
+        img.src = fallback;
+        img.onerror = function() {
+            // 3. Final fallback if nothing works
+            this.onerror = null;
+            this.src = 'https://placehold.co/400x400?text=Image+Not+Found';
+            this.style.objectFit = 'contain';
+        };
+        return;
+    }
+
+    // 4. Try adding uploads/ if it wasn't there
+    if (!currentSrc.startsWith('http') && !currentSrc.startsWith('uploads/')) {
+        img.src = 'uploads/' + currentSrc;
+        return;
+    }
+
+    // Final fallback
+    img.onerror = null;
+    img.src = 'https://placehold.co/400x400?text=Image+Not+Found';
 };
 
 // --- Cart Logic ---
@@ -273,21 +297,21 @@ function renderCartItems() {
                 <h3>Your cart is empty</h3>
                 <button class="continue-shopping" onclick="toggleCart()">Start Shopping</button>
             </div>`;
-        totalEl.innerText = 'Rs 0';
-        subtotalEl.innerText = 'Rs 0';
+        if (totalEl) totalEl.innerText = 'Rs 0';
+        if (subtotalEl) subtotalEl.innerText = 'Rs 0';
         return;
     }
 
     let total = 0;
     container.innerHTML = cart.map(item => {
-        const itemTotal = item.price * item.qty;
+        const itemTotal = (parseFloat(item.price) || 0) * (parseInt(item.qty) || 1);
         total += itemTotal;
         return `
             <div class="cart-item">
-                <img src="${item.image}" class="cart-item-img">
+                <img src="${item.image}" class="cart-item-img" onerror="this.src='https://placehold.co/100x100'">
                 <div class="cart-item-info">
                     <h4>${item.name}</h4>
-                    <span class="cart-item-price">Rs ${item.price.toLocaleString()}</span>
+                    <span class="cart-item-price">Rs ${itemTotal.toLocaleString()}</span>
                     <div class="cart-item-actions">
                         <div class="qty-control">
                             <button class="qty-btn" onclick="updateQty('${item.id}', -1)">-</button>
@@ -303,8 +327,8 @@ function renderCartItems() {
         `;
     }).join('');
 
-    totalEl.innerText = `Rs ${total.toLocaleString()}`;
-    subtotalEl.innerText = `Rs ${total.toLocaleString()}`;
+    if (totalEl) totalEl.innerText = `Rs ${total.toLocaleString()}`;
+    if (subtotalEl) subtotalEl.innerText = `Rs ${total.toLocaleString()}`;
 }
 
 window.updateQty = function(id, delta) {

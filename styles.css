@@ -2200,13 +2200,14 @@ section {
 /* Guaranteed Visibility for Images - Professional Fix */
 .product-image img,
 .product-card img,
-.flash-products img {
+.flash-products img,
+.popular-products img {
     opacity: 1 !important;
     visibility: visible !important;
     display: block !important;
-    max-height: 100%;
-    width: 100%;
-    object-fit: cover;
+    max-height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
 }
 
 /* Ensure no animation leaves it at opacity 0 */
@@ -2214,14 +2215,24 @@ section {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
+    background: #fff;
 }
 
-/* Fix for possible filter issue */
+/* Fix for possible filter/mask issue */
 .product-image {
-    background: #fdfdfd;
-    overflow: hidden;
-    position: relative;
+    background: #fdfdfd !important;
+    overflow: hidden !important;
+    position: relative !important;
     opacity: 1 !important;
-    min-height: 120px; /* Ensure space exists */
+    min-height: 150px !important; /* Ensure space exists */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 767px) {
+    .product-image {
+        min-height: 120px !important;
+    }
 }
 
