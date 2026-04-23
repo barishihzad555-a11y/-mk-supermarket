@@ -1213,26 +1213,13 @@ section {
     }
 }
 
-/* Flash Sale Animations */
+/* Flash Sale Animations - Disabled as requested */
+/*
 .flash-sale .section-header {
     animation: fadeInUp 0.8s ease-out;
 }
-
-.flash-sale .product-card:nth-child(1) {
-    animation: slideInLeft 0.6s ease-out;
-    animation-delay: 0.2s;
-    animation-fill-mode: both;
-}
-
-.flash-sale .product-card:nth-child(2) {
-    animation: slideInRight 0.6s ease-out;
-    animation-delay: 0.4s;
-    animation-fill-mode: both;
-}
-
-.countdown {
-    animation: gentlePulse 3s ease-in-out infinite;
-}
+...
+*/
 
 /* Keyframes for Flash Sale */
 @keyframes fadeInUp {
@@ -1794,16 +1781,10 @@ section {
     }
 }
 
+/* Product card animation disabled */
 .product-card {
-    animation: fadeIn 0.5s ease-out;
+    animation: none;
 }
-
-.product-card:nth-child(1) { animation-delay: 0.1s; }
-.product-card:nth-child(2) { animation-delay: 0.2s; }
-.product-card:nth-child(3) { animation-delay: 0.3s; }
-.product-card:nth-child(4) { animation-delay: 0.4s; }
-.product-card:nth-child(5) { animation-delay: 0.5s; }
-.product-card:nth-child(6) { animation-delay: 0.6s; }
 
 /* World-Class Luxury Cart Drawer System */
 .cart-overlay {
@@ -2226,25 +2207,13 @@ section {
     max-height: 100%;
     width: 100%;
     object-fit: cover;
-    transition: opacity 0.4s ease-in-out;
 }
 
 /* Ensure no animation leaves it at opacity 0 */
 .product-card {
     opacity: 1 !important;
     transform: none !important;
-    animation: fadeInProduct 0.6s ease-out forwards !important;
-}
-
-@keyframes fadeInProduct {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    animation: none !important;
 }
 
 /* Fix for possible filter issue */
