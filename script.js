@@ -34,7 +34,7 @@ async function initBanners() {
         const banners = await response.json();
 
         // Default banner if none exists
-        const defaultBanners = [{image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80'}];
+        const defaultBanners = [{image: 'uploads/default-banner.webp'}];
         const activeBanners = banners.length > 0 ? banners : defaultBanners;
 
         container.innerHTML = '';
@@ -149,7 +149,7 @@ function createProductCard(p) {
     let finalSrc = p.image;
 
     if (!finalSrc) {
-        finalSrc = 'https://placehold.co/400x400?text=No+Image';
+        finalSrc = 'assets/placeholder.webp';
     } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
         finalSrc = 'uploads/' + finalSrc;
     }
@@ -160,7 +160,7 @@ function createProductCard(p) {
                 <img src="${finalSrc}"
                      alt="${p.name}"
                      loading="lazy"
-                     onerror="this.src='https://placehold.co/400x400?text=Image+Not+Found'">
+                     onerror="handleImgError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
             <div class="product-info">
@@ -185,7 +185,6 @@ function createProductCard(p) {
 // Handle image errors gracefully
 function handleImageError(img) {
     console.log("Image load failed:", img.src);
-    // Prevent infinite loop and add loaded class to show the placeholder
     img.classList.add('loaded');
 
     if (img.src.includes('uploads/uploads/')) {
@@ -193,7 +192,7 @@ function handleImageError(img) {
         return;
     }
     img.onerror = null;
-    img.src = 'https://placehold.co/400x400?text=Photo+Coming+Soon';
+    img.src = 'assets/placeholder.webp';
 }
 
 // Global Image Error Handler to catch path issues
@@ -208,7 +207,7 @@ window.handleImgError = function(img) {
         img.src = 'uploads/' + currentSrc;
     } else {
         img.onerror = null;
-        img.src = 'https://placehold.co/400x400?text=Image+Missing';
+        img.src = 'assets/placeholder.webp';
     }
 };
 
