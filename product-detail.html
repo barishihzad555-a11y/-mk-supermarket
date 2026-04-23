@@ -270,19 +270,12 @@
                 let foundProduct = null;
                 let allProducts = [];
 
-                // 1. Try Local Storage first (for Admin uploads in local mode)
-                const localData = JSON.parse(localStorage.getItem('temp_products') || '[]');
-                foundProduct = localData.find(x => String(x.id) === String(id));
-                allProducts = localData;
-
-                // 2. Fallback to PHP if not in local storage
-                if (!foundProduct) {
-                    const response = await fetch('upload.php');
-                    if (response.ok) {
-                        const dbProducts = await response.json();
-                        foundProduct = dbProducts.find(x => String(x.id) === String(id));
-                        allProducts = dbProducts;
-                    }
+                // صرف سرور (PHP) سے ڈیٹا حاصل کریں، لوکل اسٹوریج (ڈیمو ڈیٹا) کو مکمل نظر انداز کریں
+                const response = await fetch('upload.php?type=product&t=' + Date.now());
+                if (response.ok) {
+                    const dbProducts = await response.json();
+                    foundProduct = dbProducts.find(x => String(x.id) === String(id));
+                    allProducts = dbProducts;
                 }
 
                 if(foundProduct) {
