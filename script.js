@@ -143,11 +143,14 @@ function createProductCard(p) {
     const price = parseFloat(p.price) || 0;
     const originalPrice = price * 1.25;
 
-    // RESTORED TO ORIGINAL WORKING LINK LOGIC
+    // Fix image path logic
     let finalSrc = p.image;
 
     if (!finalSrc) {
         finalSrc = 'https://placehold.co/400x400?text=No+Image';
+    } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('uploads/')) {
+        // If the path is just the filename, prepend 'uploads/'
+        finalSrc = 'uploads/' + finalSrc;
     }
 
     return `
@@ -155,6 +158,7 @@ function createProductCard(p) {
             <div class="product-image">
                 <img src="${finalSrc}"
                      alt="${p.name}"
+                     loading="lazy"
                      onerror="handleImageError(this)">
                 <span class="discount-badge">SAVE 25%</span>
             </div>
